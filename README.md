@@ -1,36 +1,42 @@
 # vibe review
 
-**在线示例：** https://heyiai02.github.io/vibe-review/ （`docs/index.html`，12 轮虚构项目）
+**English** · [中文](README.zh-CN.md)
 
-把你的 AI 编码记录（Claude Code / DeepSeek Harness / 任意 `vibe-events` JSONL）读成一份**单页 HTML 复盘报告**：
-这一轮该不该拆、哪段在返工、你习惯怎么下指令、下次怎么开口。
+**Live demo:** https://heyiai02.github.io/vibe-review/ — a 12-turn fictional project, all six sections
+(_the report itself is in Chinese for now; see [Language](#language)_)
 
-不是看板，不是 token 统计器。**六段里只有实测数字，叙事部分读你的原话写。**
+Turn your AI coding sessions (Claude Code, DeepSeek Harness, or any `vibe-events` JSONL) into a
+**single-page HTML retrospective**: which turns moved the project forward, where you actually reworked
+something, how you give instructions, and what to say differently next time.
 
-## 快速开始
+Not a dashboard. Not a token counter. **Numbers are computed; the narrative is written from your own words.**
+
+![demo](demo/hero.png)
+
+## Quick start
 
 ```bash
-git clone <repo> && cd vibe-review
+git clone https://github.com/HeYiai02/vibe-review.git && cd vibe-review
 
-# 1. 采集（DSH 传项目短名；Claude Code 加 --cc）
+# 1. collect  (short project name for DSH; add --cc for Claude Code)
 node collect.js my-project project.json
 node collect.js my-project project.json --cc
 
-# 2. 手写叙事（决策 / 返工 / 规则），见「curated.json」
+# 2. write the narrative (decisions / rework / rules) into curated.json
 $EDITOR curated.json
 
-# 3. 合并 + 渲染
+# 3. merge + render
 node build.js project.json data.json curated.json
 DATA=data.json OUTHTML=my-project-review.html node render.js
 
-# 4. 体检
+# 4. health check
 node check.js data.json
 
-# 5. 派生产物（Markdown / metrics.json / 分享卡 HTML）
+# 5. derived artifacts (Markdown / metrics.json / share cards)
 node export.js data.json out
 ```
 
-没有日志也能先看效果：
+No logs yet? Generate a fake project and see the output first:
 
 ```bash
 node demo/make-demo.js
@@ -39,48 +45,54 @@ DATA=demo/data.json OUTHTML=docs/index.html node render.js
 node check.js demo/data.json
 ```
 
-`docs/index.html` 是一份 12 轮、完全虚构的项目（一个卖咖啡豆的小站），六段齐全。
-GitHub Pages 直接从这个目录发布，所以 **`docs/` 就是示例报告本身**，改完 demo 记得重新渲染一次。
+## Pipeline
 
-## 四步流水线
-
-| 步骤 | 脚本 | 产出 |
+| Step | Script | Output |
 |---|---|---|
-| 采集 | `collect.js` + `readers.js` | `project.json`（只有实测：轮次、工具、报错、文件、token） |
-| 合并 | `build.js` | `data.json`（实测 + 你写的叙事，锚点解析在这里） |
-| 渲染 | `render.js` | `<project>-review.html`（单文件，gzip 内联数据，可离线打开） |
-| 派生 | `export.js` | `out/*.md`、`out/*.metrics.json`、`out/*-card-{v,h}.html` |
+| collect | `collect.js` + `readers.js` | `project.json` — measured facts only (turns, tool calls, errors, files, tokens) |
+| merge | `build.js` | `data.json` — facts + your narrative; anchors are resolved here |
+| render | `render.js` | `<project>-review.html` — one file, gzip-inlined data, opens offline |
+| derive | `export.js` | `out/*.md`, `out/*.metrics.json`, `out/*-card-{v,h}.html` |
 
-`check.js` 是体检：轮次自洽、会话区间、锚点存在、返工占比、明文密码与裸 IP。
+`check.js` asserts: turn totals add up, session ranges are contiguous, every anchor resolves,
+rework share is sane, and there are no plaintext passwords or bare IPs in the data.
 
-## 数据源
+## Data sources
 
-| 来源 | 怎么读 | 轮的定义 |
+| Source | Command | What counts as a "turn" |
 |---|---|---|
-| DeepSeek Harness | `node collect.js <短名> out.json` | 一次人类输入 |
-| Claude Code | `node collect.js <短名> out.json --cc` | 一次人类输入 |
-| 其它 | `node collect.js --events <file.jsonl>` | 你按 `vibe-events` 事件模型自己导出 |
+| DeepSeek Harness | `node collect.js <name> out.json` | one human input |
+| Claude Code | `node collect.js <name> out.json --cc` | one human input |
+| Anything else | `node collect.js --events <file.jsonl>` | you export it per the `vibe-events` model |
 
-**同一 git 仓库 = 同一个项目**。采集时按文件路径向上找 `.git` 归属，
-所以一个「项目」可以由多个会话、多个 agent 拼起来。
+**One git repository = one project.** Ownership is decided by walking up from each edited file to `.git`,
+so a single "project" can be assembled from several sessions and several agents.
 
-口径差比格式差更麻烦：Claude Code 的 assistant 消息条数**不是**轮次；
-OpenAI 系把 cached token 算进 input，Anthropic 单列 `cache_read_input_tokens`。
-报告里只用「一次人类输入」当轮，token 只统计 output。
+Semantic differences bite harder than format differences: the number of assistant messages in Claude Code
+is *not* the number of turns, and OpenAI-style logs fold cached tokens into `input` while Anthropic reports
+`cache_read_input_tokens` separately. This tool counts one turn per human input and only sums `output` tokens.
 
-## 叙事是手写的（这是设计，不是缺陷）
+## The narrative is hand-written (by design)
 
-脚本算得出数字，算不出「当时你怎么想」。所以决策、返工、规则三块由你（或模型读了原话后）写进 `curated.json`。
-契约、字段表、锚点规则见 **[SKILL.md](SKILL.md)**。
+Scripts can count; they cannot remember why you changed your mind. Decisions, rework episodes and rules
+go into `curated.json`, written by you (or by a model after reading the original messages).
+Contract, field table and anchor rules: **[SKILL.md](SKILL.md)**.
 
-## 已知边界
+## Language
 
-- 用户原文不截断（最长见过 9,542 字），AI 回复截到 1500 字；原文全量在日志里。
-- 云端会话（Cursor / 网页版）本地没有日志，拿不到。
-- 单会话项目不显示「会话」分段带，退回「工作段」（>3 小时空档切开）。
-- 分享卡脚本只出 HTML，PNG 要自己转（SKILL.md §7.2 有命令）。
-- 决策对比分「据日志的事实」和「推演」，后者在页面上是虚线紫色，Markdown 里标 `†`。
+The tool, the report UI and the generated narrative are **Chinese-first** — the vocabulary (起手式 / 返工 /
+教练页) is the point, and translating it generically loses the voice. An English UI is not planned;
+contributions that add an i18n layer are welcome.
 
-## 许可
+## Known limits
+
+- User messages are not truncated (longest seen: 9,542 chars); assistant replies are cut at 1,500 chars.
+- Cloud-only sessions (Cursor, web chat) have no local logs and cannot be read.
+- Single-session projects show "work segments" instead of "sessions" (>3h gaps split them).
+- `export.js` writes share cards as HTML; convert to PNG yourself (command in SKILL.md §7.2).
+- Each decision comparison is tagged *fact* (from logs) or *inference* — inference is dashed purple in the
+  page and marked `†` in Markdown.
+
+## License
 
 MIT
