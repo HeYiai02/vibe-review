@@ -284,7 +284,7 @@ ${DEGRADE}
 <footer>
   <span>数据源：${SRC_NAME} 会话日志 · ${D.totals.turns} 轮 / ${nf(D.totals.tools)} 次工具调用 / ${D.totals.errors} 次报错</span>
   <span class="sp">确定性脚本计算，叙事由模型生成 · 推测内容已单独标注</span>
-  <a class="xlink" href="archive.html">跨项目档案 →</a>
+  ${process.env.NO_ARCHIVE ? '' : '<a class="xlink" href="archive.html">跨项目档案 →</a>'}
 </footer>
 
 </div>
