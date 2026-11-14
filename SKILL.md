@@ -188,6 +188,20 @@ DATA=data_<p>.json OUTHTML=<p>-review.html node render.js
 - **改 UTF-8 源文件只能用 write / edit 工具**，不要用 PowerShell 的 `Get-Content | Set-Content`：
   PS 5.1 会按 ANSI 解码，整份文件变乱码。
 
+## 7.6 双语（`REVIEW_LANG=en`）
+
+- **三层各管一段**：页面骨架（标题、说明、按钮、图例、脚注）走 `i18n/zh.json` + `i18n/en.json`；
+  `app.js` 里的动态文案走内联 `TX(zh, en)`（**不要**给 `app.js` 再引一套 JSON，它会被整段内联进页面）；
+  叙事（决策标题、返工原因、规则）**不在代码里**，它在 `curated.json` 里——想出英文报告，就写一份
+  `curated.en.json`（`demo/` 下有现成对照）。
+- **伪元素文案**（`.pick .hint:after`、`.cf.infer .tag::after`）没法走 JS，只能在 `styles.css`
+  末尾用 `html[lang="en"] …{content:"…"}` 覆盖，并且必须排在原规则之后。
+- **两个坑**：① `i18n/*.json` 存成 UTF-8 **带 BOM** 会让 `JSON.parse` 抛错、整本字典静默变 `{}`，
+  页面渲染出 `s5.title` 这种原始 key——`i18n.js` 里已用 `.replace(/^\uFEFF/, '')` 兜底；
+  ② `app.js` 里曾用 `L` 当翻译函数名，与 `drawMsgs` 的列表变量 `L` 撞名导致「数组被当函数调用」，
+  现在统一叫 `TX`。
+- 英文比中文长 1.5 倍：`h1` 用了 `titleSize` 自适应字号，侧边导航会自动折行，其他块都靠 flex 撑开。
+
 ## 8. 交付前检查
 
 先跑体检脚本，它会把这些断言全部执行一遍（退出码 1 = 有硬错误）：
