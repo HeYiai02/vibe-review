@@ -29,7 +29,10 @@ function startLede(D) {
   const idx = T.findIndex(t => t.writes > 0);
   if (idx > 0) {
     const quiet = T.slice(1, idx).filter(t => !t.tools).length;
-    return `第 1 轮就调了 ${T[0].tools} 次工具，接着 ${quiet} 轮零工具调用——先把「能不能做」问清楚，第 ${T[idx].n} 轮才写出第一行代码。这不算慢，是把失败成本压在动手之前。`;
+    // 中间没有「零工具轮」时就别硬写「接着 0 轮零工具调用」
+    const mid = quiet > 0 ? `接着 ${quiet} 轮零工具调用——` : '';
+    const tail = quiet > 0 ? `第 ${T[idx].n} 轮才写出第一行代码` : `第 ${T[idx].n} 轮才落到文件上`;
+    return `第 1 轮就调了 ${T[0].tools} 次工具，${mid}先把「能不能做」问清楚，${tail}。这不算慢，是把失败成本压在动手之前。`;
   }
   if (idx === 0) return `第 1 轮就直接动手了（${T[0].tools} 次工具调用），没有先论证可行性——代价会在后面的返工里显形。`;
   return '整体节奏偏前期：先问清楚，再动手。';

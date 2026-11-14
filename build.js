@@ -86,7 +86,11 @@ if (C.rework) {
   const cw = JSON.parse(JSON.stringify(C.rework));
   for (const c of (cw.cases || [])) {
     c.cause = clean(c.cause); c.fix = clean(c.fix);
-    (c.quotes || []).forEach(q => { q.text = clean(q.text); });
+    (c.quotes || []).forEach(q => {
+        q.text = clean(q.text);
+        // 引用的轮次同样用锚点写，解析成全局轮号再交给渲染层
+        if (q.at != null) q.turn = R2(q.at);
+      });
     for (const k of ['prompt', 'repro']) if (c[k]) c[k] = clean(c[k]);
   }
   for (const c of (cw.cases || [])) if (Array.isArray(c.ats)) c.turns = c.ats.map(R2).filter(x => x != null);
