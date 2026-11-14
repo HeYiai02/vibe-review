@@ -1,6 +1,6 @@
 # vibe review
 
-**在线示例：** https://<your-name>.github.io/vibe-review/ （`docs/index.html`，12 轮虚构项目）
+**在线示例：** https://heyiai02.github.io/vibe-review/ （`docs/index.html`，12 轮虚构项目）
 
 把你的 AI 编码记录（Claude Code / DeepSeek Harness / 任意 `vibe-events` JSONL）读成一份**单页 HTML 复盘报告**：
 这一轮该不该拆、哪段在返工、你习惯怎么下指令、下次怎么开口。

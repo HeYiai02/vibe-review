@@ -266,7 +266,7 @@ ${DEGRADE}
 </section>
 
 <section id="s8">
-  <div class="h2"><span class="idx">07</span><h2>教练页 · 如果重来</h2><span class="note">三条，每条都挂着数字</span></div>
+  <div class="h2"><span class="idx">07</span><h2>教练页 · 如果再来一次</h2><span class="note">三条，每条都挂着数字</span></div>
   <p class="lede">庆祝页说的是你做到了什么，这一页说的是下次能省下什么。三条都不是"多练练"，每一条都能在日志里指到具体的轮次。</p>
   <div class="coach">
     ${coach.map((c, i) => `<div class="co"><span class="cn">${String(i + 1).padStart(2, '0')}</span>
