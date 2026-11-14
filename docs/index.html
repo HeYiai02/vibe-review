@@ -525,7 +525,7 @@ html[data-theme="paper"] .themes{filter:invert(1) hue-rotate(180deg)}
   text-decoration:none;color:var(--dim2);font-size:11.5px;line-height:1.2;transition:color .18s,background .18s}
 .rail a:before{content:"";position:absolute;left:0;top:50%;width:7px;height:7px;margin-top:-3.5px;border-radius:50%;
   background:var(--bg);border:1px solid var(--line);transition:.22s}
-.rail a span{opacity:.6;white-space:nowrap;letter-spacing:.01em}
+.rail a span{opacity:.6;letter-spacing:.01em;max-width:132px;line-height:1.25}
 .rail a:hover{color:var(--txt);background:rgba(255,255,255,.03)}
 .rail a:hover span{opacity:1}
 .rail a.on{color:var(--txt)}
@@ -541,13 +541,19 @@ html[data-theme="paper"] .themes{filter:invert(1) hue-rotate(180deg)}
 
 /* ---- 页脚互链 ---- */
 footer .xlink{margin-left:auto;color:var(--dim);text-decoration:none;border-bottom:1px solid transparent;transition:.18s}
-footer .xlink:hover{color:var(--accent);border-bottom-color:var(--accent)}</style>
+footer .xlink:hover{color:var(--accent);border-bottom-color:var(--accent)}
+/* ---- 英文：伪元素文案 ---- */
+html[lang="en"] .pick.open .hint:after{content:"close"}
+html[lang="en"] .pick:not(.open) .hint:after{content:"open"}
+html[lang="en"] .dnode.aftervirt .dnode-h:after{content:"on this inferred path — this step may not hold"}
+html[lang="en"] .cf.infer .tag::after{content:' · not something the log recorded'}
+</style>
 </head><body>
 <div class="wrap">
 
 <header>
   <div class="kicker">Project Review · Single Project</div>
-  <h1>一个人的<em>两天</em></h1>
+  <h1>一个人的<em>两</em>天</h1>
   <div class="sub"><b>demo-shop</b> · 一个卖手冲咖啡豆的小站，两天从零到收到第一单 · <b>12</b> 轮对话 · <b>114</b> 次工具调用 · <b>2</b> 个活跃日</div>
   <div class="firstq"><span class="who">第 1 句 · 3 月 3 日</span>我想做一个卖手冲咖啡豆的小站，先能下单就行。…</div>
 </header>
@@ -733,7 +739,7 @@ footer .xlink:hover{color:var(--accent);border-bottom-color:var(--accent)}</styl
 
 
 <footer>
-  <span>数据源：demo 会话日志 · 12 轮 / 114 次工具调用 / 13 次报错</span>
+  <span>数据源：DeepSeek Harness 会话日志 · 12 轮 / 114 次工具调用 / 13 次报错</span>
   <span class="sp">确定性脚本计算，叙事由模型生成 · 推测内容已单独标注</span>
   
 </footer>
@@ -742,8 +748,12 @@ footer .xlink:hover{color:var(--accent);border-bottom-color:var(--accent)}</styl
 
 <div class="themes" id="themes"></div>
 
+<script id="i18n" type="application/json">{"html.lang":"zh-CN","h.kicker":"Project Review · Single Project","title.pre":"一个人的","title.post":"天","h.sub":"<b>{turns}</b> 轮对话 · <b>{tools}</b> 次工具调用 · <b>{days}</b> 个活跃日","h.first":"第 1 句 · {m} 月 {d} 日","st.turns":"轮对话","st.tools":"次工具调用","st.files":"个文件被改","st.errors":"次工具报错","st.tokens":"输出 token","st.days":"个活跃日","cheer.head":"你做到了 · 三条能拿出去说的","s2.title":"起手式","s2.note":"先问能不能，再问怎么做","s2.daysNote":"每根柱子 = <b>那天的工具调用次数</b>，高度按最大值缩放。{detail}","s3.title":"轮次光谱","s3.noteOne":"1 个会话 · 每根柱子是一轮","s3.noteMany":"{n} 个会话 · 每根柱子是一轮","s3.lede":"高度是这一轮的工具调用量，颜色是质量分：越绿越顺，越红越翻车。整体是一段前陡后缓的曲线——前两天吃掉 {share}% 的工作量（{tools} 次调用里的 {two} 次），剩下的日子全是打磨。","s3.all":"全部","s3.best":"只看最好的","s3.bad":"只看翻车的","s3.wrote":"只看写了文件的","s3.long":"输入内容长的","s3.chart":"谱图","s3.msgs":"对话总览","s3.lgGood":"顺（q≥70）","s3.lgWarn":"一般（40–69）","s3.lgBad":"翻车（&lt;40）","s3.lgWrote":"柱顶青边 = 这轮写了文件","s3.qnote":"q 是确定性公式算出来的，不是模型打分：基准 70，写成功文件 +10，每次工具报错 −12，被打断 −10，下一轮你接着推进 +8，改道 −12。它量的不是你满不满意，而是这一轮有没有把事情推远、有没有留下要还的债。","s3.picksTitle":"六轮值得回看的现场","s3.picksNote":"点卡片展开当时的原话","s4.title":"决策对照表","s4.note":"{n} 个岔路口 · 点开看对照与后来产出","s4.lede":"每个节点都是一次「AI 给方案、你当场改掉或接受」。左边虚线是它当时的建议，右边实线是你真正走的路。展开后先是一段决策对比，再说这个决策之后 3 轮里产出了什么——数字从日志里数出来，不是我编的。","s4.flow":"分支图","s4.timeline":"时间轴","s4.expand":"展开","s4.collapse":"收起","s5.title":"返工分析","s5.note":"{episodes} 段 · {turns} 轮 · 吃掉 {pct}% 的时间","s5.lede":"返工不等于改得多。同一个文件被改十次，可能只是需求在长。这里只算一种：上一版被判定不可用、必须重做。每段都附你当时的原话——根因和处方是读完原话写的，不是从改动次数里猜的。","s5.episodes":"段真返工","s5.episodesNote":"其余来回是需求在长，不算","s5.turns":"轮对话","s5.turnsNote":"占全部 {all} 轮的 {pct}%","s5.minutes":"实际动手时间","s5.minutesNote":"占全部 {all} 分钟的 {pct}%","s5.errors":"次工具报错","s5.errorsNote":"占 {all} 次的 {pct}%","s5.hot":"附：改动热度","s5.hotNote":"这不是返工，只是说明重量压在哪儿","s5.edits":"{n} 次 · {e} 错","s6.title":"你在项目里的样子","s6.note":"从 {n} 条消息里量出来的","s6.lede":"不是给你贴标签，是给你看证据。","s6.instr":"你怎么下指令","s6.instrUnit":"字 / 中位数","s6.push":"你怎么推进","s6.pushUnit":"是问句","s6.trust":"你信不过谁","s6.trustUnit":"次主动提问","s6.run":"你更信跑一遍","s6.runUnit":"次运行 / {e} 次改文件","s7.title":"你的规则库","s7.note":"{n} 条 · 挑你要的，直接装","s7.lede":"这不是总结，是可以直接交给下一个 AI 的东西。勾掉你不认可的，选一个要装的位置，下面那段文字会跟着变——复制走，或下载成 AGENTS.md。","s7.count":"已选 <b id=\"pickcount\">{n}</b> / {total} 条","s7.all":"全选","s7.none":"全不选","s7.copy":"复制这段","s7.download":"下载 AGENTS.md","s7.where":"装到哪里","s7.hint":"装好后新开一个会话就生效。文件里已有的内容不会被覆盖，重复的段落会自动合并。","s7.genhead":"将写入的内容","s8.title":"教练页 · 如果再来一次","s8.note":"三条，每条都挂着数字","s8.lede":"庆祝页说的是你做到了什么，这一页说的是下次能省下什么。三条都不是\"多练练\"，每一条都能在日志里指到具体的轮次。","btn.pdf":"导出 PDF（打印版）","btn.expandAll":"展开全部决策","btn.collapseAll":"收起全部决策","ft.source":"数据源：DeepSeek Harness 会话日志 · {turns} 轮 / {tools} 次工具调用 / {errors} 次报错","ft.note":"确定性脚本计算，叙事由模型生成 · 推测内容已单独标注","ft.archive":"跨项目档案 →","ask.title":"为数不多「你说了算」的一次","ask.q":"T{turn}，我给了你 {n} 个选项，问：{q}","ask.pick":" — 你选的","deg.title":"这份报告来自 Claude Code 日志。","deg.body":"它不含待办、审批、后台任务这几类事件——所以「审批过几次」「有几条待办」「后台任务跑了多久」在本页是缺席，不是 0。","tg.dsh.t":"用户级全局","tg.dsh.d":"~/.dsh/AGENTS.md · DSH 每次请求都读，所有项目生效","tg.agents.t":"跨工具共享","tg.agents.d":"~/.agents/AGENTS.md · Claude Code / Codex 等也认这一份","tg.project.t":"只装这个项目","tg.project.d":"{path} · 不污染其它项目","tg.none.t":"先不装","tg.none.d":"只复制到剪贴板，贴哪儿由我决定","tg.project.default":"项目根/AGENTS.md","s5.hotRow":"{n} 次 · {e} 错","s6.instrA":"{n} 条消息平均 {avg} 字，中位数 {med} 字——","s6.instrShort":"你大多数时候只说半句话（「继续」「先这样」）","s6.instrShortPaste":"，偶尔贴进来一万多字的日志","s6.instrLong":"你习惯把要求一次说全","s6.instrLongPaste":"，最长的一条有 {k} 千字（贴进来的日志或代码）","s6.instrEndShort":"。指令是短的，判断是快的。","s6.instrEndLong":"。指令是完整的，边界是提前画好的。","s6.pushBody":"{n} 次你在下一条消息里推翻了上一条的方向。你不常问「怎么办」，你常问「这样对吗」——然后自己给答案。","s6.trustBody":"{n} 轮里你只让 AI 给过 {ask} 次选项。其余全靠你直接下判断。","s6.runA":"你让它跑的次数比改代码还多——验证驱动，不是描述驱动。","s6.runB":"改的比跑的多——更像是边改边想，靠回读确认。","rw.why":"为什么会来回","rw.fix":"下次这样用 AI","rw.prompt":"下次这段活，我会这么开口（点开看）","rw.repro":"下次复现这个功能，可以这样说（点开看）","rw.meta":"T{a}–T{b} · {n} 轮 · 跨 {m} 分钟 · {e} 次报错"}</script>
 <script id="data" type="application/gzip+base64">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</script>
 <script id="appsrc" type="text/plain">/* 前端交互：光谱、卡片、流程图、规则库 */
+var EN = document.documentElement.lang === 'en';
+function TX(zh, en) { return EN && en != null ? en : zh; }
+
 (function () {
   var T = D.turns, byN = {};
   T.forEach(function (t) { byN[t.n] = t; });
@@ -857,15 +867,15 @@ footer .xlink:hover{color:var(--accent);border-bottom-color:var(--accent)}</styl
       var base = String(f).split(/[\\/]/).pop();
       return '<span class="fit" title="' + esc(f) + '">' + esc(base) + '</span>';
     }).join('');
-    return '<div class="files"><span class="fsum">动过 ' + files.length + ' 个文件</span>' +
-      '<div class="fpop"><div class="fph">点一次文件名可看全路径</div>' + items + '</div></div>';
+    return '<div class="files"><span class="fsum">' + TX('动过 ', '') + files.length + TX(' 个文件', ' files touched') + '</span>' +
+      '<div class="fpop"><div class="fph">' + TX('点一次文件名可看全路径', 'click a name to see the full path') + '</div>' + items + '</div></div>';
   }
   function bub(who, txt, cls) {
     var s = txt || '';
     var long = s.length > 420;
     return '<div class="bub ' + cls + '"><span class="who">' + who + '</span>' +
       '<div class="txt"><div class="bd' + (long ? ' clamp' : '') + '">' + esc(md(s)) + '</div>' +
-      (long ? '<button class="more" data-rest="' + (s.length - 420) + '">展开全文 · 还有 ' + (s.length - 420) + ' 字</button>' : '') +
+      (long ? '<button class="more" data-rest="' + (s.length - 420) + '">' + TX('展开全文 · 还有 ' + (s.length - 420) + ' 字', 'Read it all · ' + (s.length - 420) + ' more chars') + '</button>' : '') +
       '</div></div>';
   }
 
@@ -873,12 +883,12 @@ footer .xlink:hover{color:var(--accent);border-bottom-color:var(--accent)}</styl
   var days = document.getElementById('days');
   days.innerHTML = D.days.map(function (d, i) {
     var h = Math.max(4, Math.round(d.tools / D.maxDay * 58));
-    var lb = i === 0 ? '第 1 天' : i === 1 ? '第 2 天' : d.d.slice(5);
+    var lb = i === 0 ? TX('第 1 天', 'Day 1') : i === 1 ? TX('第 2 天', 'Day 2') : d.d.slice(5);
     return '<div class="day' + (d.tools >= 300 ? ' hot' : '') + (d.tools === 0 ? ' zero' : '') + '">' +
       '<div class="bar" style="height:' + h + 'px"></div>' +
       '<div class="lb"><b>' + nf(d.tools) + '</b>' + lb + '</div></div>';
-  }).join('') + '<div class="days-sum"><b>' + D.days.length + '</b> 天开工<b>' +
-    nf(D.totals.tools) + '</b> 次调用<b>' + nf(D.totals.turns) + '</b> 轮对话</div>';
+  }).join('') + '<div class="days-sum"><b>' + D.days.length + '</b> ' + TX('天开工', 'active days') + '<b>' +
+    nf(D.totals.tools) + '</b> ' + TX('次调用', 'calls') + '<b>' + nf(D.totals.turns) + '</b> ' + TX('轮对话', 'turns') + '</div>';
 
   /* ---------- 02 轮次光谱 ---------- */
   var maxTools = Math.max.apply(null, T.map(function (t) { return t.tools; }));
@@ -886,7 +896,7 @@ footer .xlink:hover{color:var(--accent);border-bottom-color:var(--accent)}</styl
   bars.innerHTML = T.map(function (t) {
     var h = Math.max(3, Math.round(t.tools / maxTools * 150));
     var c = t.q >= 70 ? 'var(--good)' : t.q >= 40 ? 'var(--warn)' : 'var(--bad)';
-    return '<div class="bar-t" data-t="' + t.n + '" title="T' + t.n + ' · q' + t.q + ' · ' + t.tools + ' 次工具">' +
+    return '<div class="bar-t" data-t="' + t.n + '" title="T' + t.n + ' · q' + t.q + ' · ' + t.tools + TX(' 次工具', ' tool calls') + '">' +
       '<i style="height:' + h + 'px;background:' + c + '">' + (t.writes ? '<u></u>' : '') + '</i></div>';
   }).join('');
 
@@ -894,7 +904,7 @@ footer .xlink:hover{color:var(--accent);border-bottom-color:var(--accent)}</styl
   var multi = (D.sessions || []).length > 1;
   if (multi) {
     /* 多会话时柱序按会话分组，不是全局时间顺序——再画日期轴就会来回跳，直接不画 */
-    axis.innerHTML = '<span style="left:0;transform:none;opacity:.55">柱子按会话分组排列，不是时间顺序</span>';
+    axis.innerHTML = '<span style="left:0;transform:none;opacity:.55">' + TX('柱子按会话分组排列，不是时间顺序', 'Bars are grouped by session, not by time') + '</span>';
   } else {
   var marks = [], lastKey = '', lastPct = -99;
   T.forEach(function (t, i) {
@@ -944,9 +954,9 @@ footer .xlink:hover{color:var(--accent);border-bottom-color:var(--accent)}</styl
         if (i0 < 0) i0 = 0; if (i1 < 0) i1 = T.length - 1;
         // 会话可能主要改的是另一个仓库：写进标签，别让人以为整段都在当前目录
         var kb = s.key ? s.key.split('/').pop() : '';
-        var other = kb && D.cwd && kb !== D.cwd ? ' · 改 ' + kb : '';
+        var other = kb && D.cwd && kb !== D.cwd ? ' · ' + TX('改 ', 'in ') + kb : '';
         return band(i0 / T.length * 100, (i1 + 1) / T.length * 100,
-          '会话 ' + s.id, s.turns + ' 轮' + other);
+          TX('会话 ', 'Session ') + s.id, s.turns + TX(' 轮', ' turns') + other);
       }).join('');
     } else if (SEGS.length > 1) {
       /* 单会话：退回到“工作段”（同一会话里隔了 >3 小时的两截）
@@ -955,13 +965,13 @@ footer .xlink:hover{color:var(--accent);border-bottom-color:var(--accent)}</styl
       segrow.innerHTML = SEGS.map(function (s) {
         var a = s[0] / T.length * 100, b = (s[s.length - 1] + 1) / T.length * 100;
         var d = new Date(T[s[0]].ts);
-        var sub = (d.getMonth() + 1) + '/' + d.getDate() + ' · ' + s.length + ' 轮';
+        var sub = (d.getMonth() + 1) + '/' + d.getDate() + ' · ' + s.length + TX(' 轮', ' turns');
         if (b - a < 9) {
           return '<span class="segtick" style="left:' + a.toFixed(2) + '%;width:' + (b - a).toFixed(2) +
-            '%" title="工作段 ' + sub + '"></span>';
+            '%" title="' + TX('工作段 ', 'Work block ') + sub + '"></span>';
         }
         shown++;
-        return band(a, b, '工作段 ' + shown, sub);
+        return band(a, b, TX('工作段 ', 'Work block ') + shown, sub);
       }).join('');
     }
   }
@@ -984,14 +994,14 @@ footer .xlink:hover{color:var(--accent);border-bottom-color:var(--accent)}</styl
     detail.innerHTML =
       '<div class="head"><span class="pill">T' + el.n + '</span>' +
       '<span class="pill">' + dt(el.ts) + '</span>' +
-      '<span class="pill q">质量分 ' + el.q + '</span>' +
-      '<span class="pill">' + el.tools + ' 次工具</span>' +
-      (el.dur ? '<span class="pill">' + el.dur + ' 分钟</span>' : '') +
-      (el.err ? '<span class="pill e">' + el.err + ' 次报错</span>' : '') +
-      (el.compacted ? '<span class="pill">上下文压缩</span>' : '') +
-      '<span class="x" id="dx">收起</span></div>' +
-      bub('你', el.user || '（这一轮没有文字指令）', 'u') +
-      bub('AI', el.ai || '（这一轮没有回复正文）', 'a') +
+      '<span class="pill q">' + TX('质量分 ', 'q ') + el.q + '</span>' +
+      '<span class="pill">' + el.tools + TX(' 次工具', ' tool calls') + '</span>' +
+      (el.dur ? '<span class="pill">' + el.dur + TX(' 分钟', ' min') + '</span>' : '') +
+      (el.err ? '<span class="pill e">' + el.err + TX(' 次报错', ' errors') + '</span>' : '') +
+      (el.compacted ? '<span class="pill">' + TX('上下文压缩', 'compacted') + '</span>' : '') +
+      '<span class="x" id="dx">' + TX('收起', 'close') + '</span></div>' +
+      bub(TX('你', 'You'), el.user || TX('（这一轮没有文字指令）', '(no text in this turn)'), 'u') +
+      bub('AI', el.ai || TX('（这一轮没有回复正文）', '(no reply body)'), 'a') +
       filesChip(el.files);
     detail.classList.add('on');
   }
@@ -1061,7 +1071,7 @@ footer .xlink:hover{color:var(--accent);border-bottom-color:var(--accent)}</styl
       var qc = t.q >= 70 ? 'var(--good)' : t.q >= 40 ? 'var(--warn)' : 'var(--bad)';
       return '<div class="um' + (mSel === t.n ? ' on' : '') + '" data-t="' + t.n + '">' +
         '<div class="um-h"><span class="um-n">T' + t.n + '</span><span>' + dt(t.ts) + '</span>' +
-        '<span>' + (t.ulen || t.clean.length) + ' 字</span>' +
+        '<span>' + (t.ulen || t.clean.length) + TX(' 字', ' chars') + '</span>' +
         '<span style="color:' + qc + '">q' + t.q + '</span></div>' +
         '<div class="um-b">' + esc(md(t.clean)) + '</div></div>';
     }).join('');
@@ -1106,10 +1116,10 @@ footer .xlink:hover{color:var(--accent);border-bottom-color:var(--accent)}</styl
   });
 
   /* ---------- 主题 ---------- */
-  var THEMES = [['', '夜色'], ['ice', '深海'], ['amber', '暖夜'], ['paper', '纸白']];
+  var THEMES = [['', TX('夜色', 'Night')], ['ice', TX('深海', 'Deep')], ['amber', TX('暖夜', 'Warm')], ['paper', TX('纸白', 'Paper')]];
   var thBar = document.getElementById('themes');
   if (thBar) {
-    thBar.innerHTML = '<span>风格</span>' + THEMES.map(function (t) {
+    thBar.innerHTML = '<span>' + TX('风格', 'Theme') + '</span>' + THEMES.map(function (t) {
       return '<button data-th="' + t[0] + '">' + t[1] + '</button>';
     }).join('');
     var applyTh = function (name) {
@@ -1133,38 +1143,52 @@ footer .xlink:hover{color:var(--accent);border-bottom-color:var(--accent)}</styl
   function whyOf(k, t, L) {
     var dk = new Date(t.ts), pad = function (n) { return String(n).padStart(2, '0'); };
     var ymd = dk.getFullYear() + '-' + pad(dk.getMonth() + 1) + '-' + pad(dk.getDate());
-    if (k === '最长的一口气') return '连续跑了 ' + t.dur + ' 分钟、' + t.tools + ' 次工具调用' + (t.err ? ('，中间错了 ' + t.err + ' 次也没停') : '，一次没断') + '。你这轮的指令只有 ' + L + ' 字——给的是目标，不是步骤，它才能自己往下推这么久。';
-    if (k === '它干得最多') return t.tools + ' 次工具调用、写了 ' + t.writes + ' 个文件' + (t.err ? ('、错 ' + t.err + ' 次') : '、一次没错') + '。量这么大，说明这轮铺开的是一整块功能，不是一个点的修补。';
-    if (k === '最长的一段需求') return '你一次写了 ' + L + ' 字，把页面、数据、权限、顺序都说完了。回头看，这种长度的交代后面几乎不用返工——歧义在开头就被你消掉了。';
-    if (k === '最顺的一轮') return '0 次报错、' + t.writes + ' 个文件一次写对，q 分 ' + t.q + '。你的指令 ' + L + ' 字，剩下的它自己补完——这是「需求说清楚 + 改动范围小」叠在一起的结果。';
-    if (k === '最晚的一轮') return '这条消息发出时已经 ' + pad(dk.getHours()) + ':' + pad(dk.getMinutes()) + '，这一天你一共调用了 ' + nf(dayTools[ymd] || t.tools) + ' 次工具。收尾阶段的改动通常很小，但都在关键路径上。';
+    if (k === '最长的一口气') return EN
+      ? 'Ran ' + t.dur + ' minutes straight, ' + t.tools + ' tool calls' + (t.err ? (', and kept going through ' + t.err + ' errors') : ', never once stopping') + '. Your instruction for that turn was only ' + L + ' chars — you gave a goal, not steps, which is why it could run that long on its own.'
+      : '连续跑了 ' + t.dur + ' 分钟、' + t.tools + ' 次工具调用' + (t.err ? ('，中间错了 ' + t.err + ' 次也没停') : '，一次没断') + '。你这轮的指令只有 ' + L + ' 字——给的是目标，不是步骤，它才能自己往下推这么久。';
+    if (k === '它干得最多') return EN
+      ? t.tools + ' tool calls and ' + t.writes + ' files written' + (t.err ? (', ' + t.err + ' errors') : ', zero errors') + '. Volume like that means the turn opened up a whole feature, not patched a point.'
+      : t.tools + ' 次工具调用、写了 ' + t.writes + ' 个文件' + (t.err ? ('、错 ' + t.err + ' 次') : '、一次没错') + '。量这么大，说明这轮铺开的是一整块功能，不是一个点的修补。';
+    if (k === '最长的一段需求') return EN
+      ? 'You wrote ' + L + ' chars in one go — pages, data, permissions, order, all of it. Looking back, briefs that long almost never needed rework: you killed the ambiguity at the start.'
+      : '你一次写了 ' + L + ' 字，把页面、数据、权限、顺序都说完了。回头看，这种长度的交代后面几乎不用返工——歧义在开头就被你消掉了。';
+    if (k === '最顺的一轮') return EN
+      ? 'Zero errors, ' + t.writes + ' files right first time, q ' + t.q + '. Your instruction was ' + L + ' chars and it filled in the rest — a clear brief plus a small blast radius.'
+      : '0 次报错、' + t.writes + ' 个文件一次写对，q 分 ' + t.q + '。你的指令 ' + L + ' 字，剩下的它自己补完——这是「需求说清楚 + 改动范围小」叠在一起的结果。';
+    if (k === '最晚的一轮') return EN
+      ? 'Sent at ' + pad(dk.getHours()) + ':' + pad(dk.getMinutes()) + '; that day you made ' + nf(dayTools[ymd] || t.tools) + ' tool calls in total. End-of-day changes are usually small, but they sit on the critical path.'
+      : '这条消息发出时已经 ' + pad(dk.getHours()) + ':' + pad(dk.getMinutes()) + '，这一天你一共调用了 ' + nf(dayTools[ymd] || t.tools) + ' 次工具。收尾阶段的改动通常很小，但都在关键路径上。';
     return '';
   }
   function pickBody(p, t, src) {
+    var why = TX('为什么是它', 'Why this one');
     if (p.kind === 'rework') {
       var c = D.rework.cases.filter(function (x) { return x.turns.indexOf(t.n) >= 0; })[0];
-      var out = '<div class="why"><b>为什么是它</b><p>' + esc(c ? c.cause : '这一轮是整段里最糟的一次，后面几轮都在补同一件事。') + '</p></div>';
+      var out = '<div class="why"><b>' + why + '</b><p>' + esc(c ? c.cause : TX('这一轮是整段里最糟的一次，后面几轮都在补同一件事。', 'The worst turn in the stretch — the following turns were all patching the same thing.')) + '</p></div>';
       if (c) {
-        out += '<div class="rwl"><div class="rwlh">这一段一共 ' + c.n + ' 轮 · 跨 ' + c.spanMin + ' 分钟 · ' + c.errors + ' 次报错 · 你按顺序是这么说的：</div>' +
+        out += '<div class="rwl"><div class="rwlh">' +
+          (EN
+            ? c.n + ' turns, ' + c.spanMin + ' minutes, ' + c.errors + ' errors. In order, this is what you said:'
+            : '这一段一共 ' + c.n + ' 轮 · 跨 ' + c.spanMin + ' 分钟 · ' + c.errors + ' 次报错 · 你按顺序是这么说的：') + '</div>' +
           c.turns.map(function (n) {
             var x = byN[n]; if (!x) return '';
             return '<div class="rwrow"><span class="tn">T' + n + '</span><span class="tx">' +
-              esc(md((x.clean || '（无文字指令）').slice(0, 130))) + '</span><span class="er">' + (x.err ? x.err + ' 错' : '—') + '</span></div>';
+              esc(md((x.clean || TX('（无文字指令）', '(no text instruction)')).slice(0, 130))) + '</span><span class="er">' + (x.err ? x.err + TX(' 错', ' err') : '—') + '</span></div>';
           }).join('') + '</div>' +
-          '<div class="fixb"><b>下次怎么开口</b><p>' + esc(c.fix) + '</p></div>';
+          '<div class="fixb"><b>' + TX('下次怎么开口', 'How to open next time') + '</b><p>' + esc(c.fix) + '</p></div>';
       }
       return out;
     }
-    return '<div class="why"><b>为什么是它</b><p>' + esc(whyOf(p.k, t, src.length)) + '</p></div>' +
-      bub('你', src || '（这一轮没有文字指令）', 'u') +
-      bub('AI', (t.ai || '（这一轮没有回复正文）'), 'a') +
+    return '<div class="why"><b>' + why + '</b><p>' + esc(whyOf(p.k, t, src.length)) + '</p></div>' +
+      bub(TX('你', 'You'), src || TX('（这一轮没有文字指令）', '(no text in this turn)'), 'u') +
+      bub('AI', (t.ai || TX('（这一轮没有回复正文）', '(no reply body)')), 'a') +
       filesChip(t.files);
   }
   var picks = [
-    { k: '最长的一口气', pick: function (L) { var pool = L.filter(function (t) { return t.clean && t.clean.length > 30; }); return (pool.length ? pool : L).reduce(function (a, b) { return b.dur > a.dur ? b : a; }); }, unit: '分钟', val: function (t) { return t.dur; }, note: '连续自动执行最久的一轮' },
-    { k: '它干得最多', pick: function (L) { return L.reduce(function (a, b) { return b.tools > a.tools ? b : a; }); }, unit: '次工具', val: function (t) { return t.tools; }, note: '一轮里调用工具的次数' },
+    { k: '最长的一口气', unit: TX('分钟', 'min'), note: TX('连续自动执行最久的一轮', 'the longest uninterrupted run'), pick: function (L) { var pool = L.filter(function (t) { return t.clean && t.clean.length > 30; }); return (pool.length ? pool : L).reduce(function (a, b) { return b.dur > a.dur ? b : a; }); }, val: function (t) { return t.dur; } },
+    { k: '它干得最多', unit: TX('次工具', 'calls'), note: TX('一轮里调用工具的次数', 'tool calls in a single turn'), pick: function (L) { return L.reduce(function (a, b) { return b.tools > a.tools ? b : a; }); }, val: function (t) { return t.tools; } },
     {
-      k: '最长的一段需求', note: '你写得最完整的一次交代', unit: '字',
+      k: '最长的一段需求', note: TX('你写得最完整的一次交代', 'your most complete brief'), unit: TX('字', 'chars'),
       pick: function (L) {
         var pool = L.filter(function (t) { return t.clean.length >= 150 && t.clean.length <= 1200; });
         if (!pool.length) pool = L;
@@ -1172,10 +1196,14 @@ footer .xlink:hover{color:var(--accent);border-bottom-color:var(--accent)}</styl
       },
       val: function (t) { return t.clean.length; }
     },
-    { k: '最顺的一轮', pick: function (L) { return L.reduce(function (a, b) { return (b.q > a.q ? b : (b.q === a.q && b.tools > a.tools ? b : a)); }); }, unit: '分', val: function (t) { return t.q; }, note: '零报错、按预期落地' },
-    { k: '最惨的一轮', kind: 'rework', pick: function (L) { return L.reduce(function (a, b) { return b.q < a.q ? b : a; }); }, unit: '分', val: function (t) { return t.q; }, note: '点了看这段为什么反复' },
-    { k: '最晚的一轮', pick: function (L) { return L.reduce(function (a, b) { return b.ts > a.ts ? b : a; }); }, unit: '', val: function (t) { var d = new Date(t.ts); return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); }, note: '最后一条消息的时间' }
+    { k: '最顺的一轮', unit: TX('分', 'q'), note: TX('零报错、按预期落地', 'zero errors, landed as planned'), pick: function (L) { return L.reduce(function (a, b) { return (b.q > a.q ? b : (b.q === a.q && b.tools > a.tools ? b : a)); }); }, val: function (t) { return t.q; } },
+    { k: '最惨的一轮', kind: 'rework', unit: TX('分', 'q'), note: TX('点了看这段为什么反复', 'open it to see why this kept coming back'), pick: function (L) { return L.reduce(function (a, b) { return b.q < a.q ? b : a; }); }, val: function (t) { return t.q; } },
+    { k: '最晚的一轮', unit: '', note: TX('最后一条消息的时间', 'the last message of the day'), pick: function (L) { return L.reduce(function (a, b) { return b.ts > a.ts ? b : a; }); }, val: function (t) { var d = new Date(t.ts); return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); } }
   ];
+  function dk(k) {
+    var m = { '最长的一口气': 'Longest unbroken run', '它干得最多': 'Most work in one turn', '最长的一段需求': 'Longest brief', '最顺的一轮': 'Smoothest turn', '最惨的一轮': 'Worst turn', '最晚的一轮': 'Latest turn' };
+    return EN ? (m[k] || k) : k;
+  }
   var box = document.getElementById('picks');
   var used = {};
   box.innerHTML = picks.map(function (p, i) {
@@ -1186,10 +1214,10 @@ footer .xlink:hover{color:var(--accent);border-bottom-color:var(--accent)}</styl
     var src = (t.clean === undefined ? cleanUser(t.user) : t.clean);
     var head = src.slice(0, 150) + (src.length > 150 ? '…' : '');
     return '<div class="pick' + (p.kind === 'rework' ? ' rwk' : '') + '" data-i="' + i + '">' +
-      '<div class="k"><em>' + p.k + '</em><span class="hint"></span></div>' +
+      '<div class="k"><em>' + dk(p.k) + '</em><span class="hint"></span></div>' +
       '<div class="big">' + nf(p.val(t)) + (p.unit ? '<span>' + p.unit + '</span>' : '') + '</div>' +
       '<div class="sub">T' + t.n + ' · ' + dt(t.ts) + ' · ' + p.note + '</div>' +
-      '<div class="q3"><b>你：</b>' + esc(md(head || '（这一轮没有文字指令）')) + '</div>' +
+      '<div class="q3"><b>' + TX('你：', 'You: ') + '</b>' + esc(md(head || TX('（这一轮没有文字指令）', '(no text in this turn)'))) + '</div>' +
       '<div class="pbody">' + pickBody(p, t, src) + '</div></div>';
   }).join('');
   box.addEventListener('click', function (e) {
@@ -1216,7 +1244,7 @@ footer .xlink:hover{color:var(--accent);border-bottom-color:var(--accent)}</styl
     if (m) {
       var bd = m.parentElement.querySelector('.bd');
       var on = bd.classList.toggle('clamp');
-      m.textContent = on ? ('展开全文 · 还有 ' + (m.dataset.rest || '') + ' 字') : '收起';
+      m.textContent = on ? TX('展开全文 · 还有 ' + (m.dataset.rest || '') + ' 字', 'Read more · ' + (m.dataset.rest || '') + ' chars left') : TX('收起', 'collapse');
     }
   });
 
@@ -1245,7 +1273,23 @@ footer .xlink:hover{color:var(--accent);border-bottom-color:var(--accent)}</styl
     var rw = (D.rework.cases || []).filter(function (c) { return c.turns.indexOf(d.turn) >= 0; })[0];
     var shorts = [];
     files.forEach(function (f) { var s = short2(f); if (shorts.indexOf(s) < 0) shorts.push(s); });
-    var s = files.length
+    var s;
+    if (EN) {
+      s = files.length
+        ? ('The next 3 turns touched ' + files.length + ' files (' + shorts.slice(0, 2).join(', ') + (shorts.length > 2 ? ', and more' : '') + ')')
+        : 'The next 3 turns touched no files';
+      s += ', made ' + tools + ' tool calls';
+      if (mins) s += ' and took ' + Math.round(mins) + ' minutes';
+      s += ', with ' + errs + ' errors. ';
+      if (files.length) {
+        s += 'Those files were edited again in ' + touchLater + ' later turns';
+        if (edits) s += ', ' + edits + ' edits in total';
+        s += '. ';
+      }
+      if (rw) s += 'This stretch later turned into ' + rw.id + ' “' + rw.name + '”, a ' + rw.n + '-turn rework.';
+      return s.trim();
+    }
+    s = files.length
       ? ('之后 3 轮动了 ' + files.length + ' 个文件（' + shorts.slice(0, 2).join('、') + (shorts.length > 2 ? ' 等' : '') + '）')
       : '之后 3 轮没有动文件';
     s += '，调用 ' + tools + ' 次工具';
@@ -1263,20 +1307,20 @@ footer .xlink:hover{color:var(--accent);border-bottom-color:var(--accent)}</styl
     // cf 可能是「从日志里读出来的事实」，也可能是「推演」。两者必须一眼分得开，
     // 否则页脚那句「推测内容已单独标注」就是空承诺。
     var k = d.cfKind === 'infer' ? 'infer' : 'fact';
-    var tag = k === 'infer' ? '若走 AI 那条（推演）' : '决策对比（据日志）';
-    var hint = k === 'infer' ? ' title="这条是推演：另一条路没有真的发生过，结论是从后面的数据倒推的"' : '';
+    var tag = k === 'infer' ? TX('若走 AI 那条（推演）', 'Had you taken the AI road (inference)') : TX('决策对比（据日志）', 'Decision comparison (from logs)');
+    var hint = k === 'infer' ? ' title="' + TX('这条是推演：另一条路没有真的发生过，结论是从后面的数据倒推的', 'This one is inference: the other road never happened, so it is back-filled from later data.') + '"' : '';
     return '<div class="cf ' + k + '"' + hint + '><span class="tag">' + tag + '</span><p>' +
-        esc(d.cf || '（这一步没有留下对照记录）') + '</p></div>' +
-      '<div class="res"><span class="tag">决策后产出了什么</span><p>' + esc(resultOf(d)) + '</p></div>';
+        esc(d.cf || TX('（这一步没有留下对照记录）', '(no comparison was recorded for this step)')) + '</p></div>' +
+      '<div class="res"><span class="tag">' + TX('决策后产出了什么', 'What it produced') + '</span><p>' + esc(resultOf(d)) + '</p></div>';
   }
   flows.innerHTML = NODES.map(function (d) {
     return '<div class="dnode" data-n="' + d.turn + '">' +
       '<div class="dnode-h"><span class="n">T' + d.turn + '</span><span class="t">' + esc(d.title) + '</span>' +
-      '<span class="op">展开</span></div>' +
+      '<span class="op">' + TX('展开', 'open') + '</span></div>' +
       '<div class="dfork">' +
-      '<div class="arm no"><span class="tag">AI 主张</span><p>' + esc(d.aiSide || '') + '</p></div>' +
+      '<div class="arm no"><span class="tag">' + TX('AI 主张', 'What the AI wanted') + '</span><p>' + esc(d.aiSide || '') + '</p></div>' +
       '<div class="dfork-c"><span class="dot"></span></div>' +
-      '<div class="arm yes"><span class="tag">你选的</span><p>' + esc(d.choice || '') + '</p></div>' +
+      '<div class="arm yes"><span class="tag">' + TX('你选的', 'What you chose') + '</span><p>' + esc(d.choice || '') + '</p></div>' +
       '</div>' +
       '<div class="dnode-b">' + nodeBody(d) + '</div></div>';
   }).join('');
@@ -1286,7 +1330,7 @@ footer .xlink:hover{color:var(--accent);border-bottom-color:var(--accent)}</styl
     var node = h.parentElement;
     collapseKeep(node, function () { node.classList.toggle('open'); });
     var op = h.querySelector('.op');
-    if (op) op.textContent = node.classList.contains('open') ? '收起' : '展开';
+    if (op) op.textContent = node.classList.contains('open') ? TX('收起', 'close') : TX('展开', 'open');
   });
 
   /* ---------- 03b 时间轴视图 ---------- */
@@ -1318,8 +1362,8 @@ footer .xlink:hover{color:var(--accent);border-bottom-color:var(--accent)}</styl
       collapseKeep(tlBody, function () {
         tlBody.innerHTML = '<div class="tlb"><div class="tlb-h"><span class="n">T' + d.turn + '</span>' +
           '<span class="t">' + esc(d.title) + '</span></div>' +
-          '<div class="cmp"><div><span class="tag">AI 主张</span><p>' + esc(d.aiSide || '') + '</p></div>' +
-          '<div class="yes"><span class="tag">你选的</span><p>' + esc(d.choice || '') + '</p></div></div>' +
+          '<div class="cmp"><div><span class="tag">' + TX('AI 主张', 'What the AI wanted') + '</span><p>' + esc(d.aiSide || '') + '</p></div>' +
+          '<div class="yes"><span class="tag">' + TX('你选的', 'What you chose') + '</span><p>' + esc(d.choice || '') + '</p></div></div>' +
           nodeBody(d) + '</div>';
         tlBody.classList.add('on');
       });
@@ -1338,12 +1382,12 @@ footer .xlink:hover{color:var(--accent);border-bottom-color:var(--accent)}</styl
   }
 
   /* ---------- 06 规则库 ---------- */
-  var GROUPS = ['说话方式', '动手之前', '红线', '交付', '技术'];
+  var GROUPS = EN ? ['Tone', 'Before coding', 'Red lines', 'Delivery', 'Technical'] : ['说话方式', '动手之前', '红线', '交付', '技术'];
   var TGT = {
-    dsh: { path: D.paths.dsh, note: '不存在就新建。DSH 每次请求都会先读这一份，之后所有项目自动生效。' },
-    agents: { path: D.paths.agents, note: '不存在就新建。遵循 agents 约定的工具（Claude Code、Codex 等）也会读。' },
-    project: { path: D.paths.project, note: '只对这个项目生效。放在项目根目录，AI 打开目录时自动带上。' },
-    none: { path: '（不写入文件）', note: '只复制到剪贴板，贴到哪里由你决定。' }
+    dsh: { path: D.paths.dsh, note: TX('不存在就新建。DSH 每次请求都会先读这一份，之后所有项目自动生效。', 'Created if missing. DSH reads this on every request, so it applies to all projects.') },
+    agents: { path: D.paths.agents, note: TX('不存在就新建。遵循 agents 约定的工具（Claude Code、Codex 等）也会读。', 'Created if missing. Tools that follow the agents convention (Claude Code, Codex) read it too.') },
+    project: { path: D.paths.project, note: TX('只对这个项目生效。放在项目根目录，AI 打开目录时自动带上。', 'Applies to this project only. Lives in the repo root; the agent picks it up when it opens the folder.') },
+    none: { path: TX('（不写入文件）', '(no file written)'), note: TX('只复制到剪贴板，贴到哪里由你决定。', 'Copied to the clipboard — you decide where it goes.') }
   };
   document.getElementById('lib').innerHTML = GROUPS.map(function (g) {
     var rs = D.rules.filter(function (r) { return r.group === g; });
@@ -1469,6 +1513,7 @@ footer .xlink:hover{color:var(--accent);border-bottom-color:var(--accent)}</styl
   var stream = new Blob([u8]).stream().pipeThrough(new DecompressionStream('gzip'));
   new Response(stream).text().then(function (s) {
     window.D = JSON.parse(s);
+    window.I18N = JSON.parse(document.getElementById('i18n').textContent);
     var el = document.createElement('script');
     el.textContent = document.getElementById('appsrc').textContent;
     document.body.appendChild(el);
@@ -1480,7 +1525,7 @@ document.getElementById('expandAll').onclick = function () {
   var all = document.querySelectorAll('.dnode');
   var anyClosed = [].some.call(all, function (n) { return !n.classList.contains('open'); });
   all.forEach(function (n) { n.classList.toggle('open', anyClosed); });
-  this.textContent = anyClosed ? '收起全部决策' : '展开全部决策';
+  this.textContent = anyClosed ? T('btn.collapseAll') : T('btn.expandAll');
 };
 </script>
 </body></html>

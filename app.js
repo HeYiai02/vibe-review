@@ -1,4 +1,7 @@
 /* 前端交互：光谱、卡片、流程图、规则库 */
+var EN = document.documentElement.lang === 'en';
+function TX(zh, en) { return EN && en != null ? en : zh; }
+
 (function () {
   var T = D.turns, byN = {};
   T.forEach(function (t) { byN[t.n] = t; });
@@ -112,15 +115,15 @@
       var base = String(f).split(/[\\/]/).pop();
       return '<span class="fit" title="' + esc(f) + '">' + esc(base) + '</span>';
     }).join('');
-    return '<div class="files"><span class="fsum">动过 ' + files.length + ' 个文件</span>' +
-      '<div class="fpop"><div class="fph">点一次文件名可看全路径</div>' + items + '</div></div>';
+    return '<div class="files"><span class="fsum">' + TX('动过 ', '') + files.length + TX(' 个文件', ' files touched') + '</span>' +
+      '<div class="fpop"><div class="fph">' + TX('点一次文件名可看全路径', 'click a name to see the full path') + '</div>' + items + '</div></div>';
   }
   function bub(who, txt, cls) {
     var s = txt || '';
     var long = s.length > 420;
     return '<div class="bub ' + cls + '"><span class="who">' + who + '</span>' +
       '<div class="txt"><div class="bd' + (long ? ' clamp' : '') + '">' + esc(md(s)) + '</div>' +
-      (long ? '<button class="more" data-rest="' + (s.length - 420) + '">展开全文 · 还有 ' + (s.length - 420) + ' 字</button>' : '') +
+      (long ? '<button class="more" data-rest="' + (s.length - 420) + '">' + TX('展开全文 · 还有 ' + (s.length - 420) + ' 字', 'Read it all · ' + (s.length - 420) + ' more chars') + '</button>' : '') +
       '</div></div>';
   }
 
@@ -128,12 +131,12 @@
   var days = document.getElementById('days');
   days.innerHTML = D.days.map(function (d, i) {
     var h = Math.max(4, Math.round(d.tools / D.maxDay * 58));
-    var lb = i === 0 ? '第 1 天' : i === 1 ? '第 2 天' : d.d.slice(5);
+    var lb = i === 0 ? TX('第 1 天', 'Day 1') : i === 1 ? TX('第 2 天', 'Day 2') : d.d.slice(5);
     return '<div class="day' + (d.tools >= 300 ? ' hot' : '') + (d.tools === 0 ? ' zero' : '') + '">' +
       '<div class="bar" style="height:' + h + 'px"></div>' +
       '<div class="lb"><b>' + nf(d.tools) + '</b>' + lb + '</div></div>';
-  }).join('') + '<div class="days-sum"><b>' + D.days.length + '</b> 天开工<b>' +
-    nf(D.totals.tools) + '</b> 次调用<b>' + nf(D.totals.turns) + '</b> 轮对话</div>';
+  }).join('') + '<div class="days-sum"><b>' + D.days.length + '</b> ' + TX('天开工', 'active days') + '<b>' +
+    nf(D.totals.tools) + '</b> ' + TX('次调用', 'calls') + '<b>' + nf(D.totals.turns) + '</b> ' + TX('轮对话', 'turns') + '</div>';
 
   /* ---------- 02 轮次光谱 ---------- */
   var maxTools = Math.max.apply(null, T.map(function (t) { return t.tools; }));
@@ -141,7 +144,7 @@
   bars.innerHTML = T.map(function (t) {
     var h = Math.max(3, Math.round(t.tools / maxTools * 150));
     var c = t.q >= 70 ? 'var(--good)' : t.q >= 40 ? 'var(--warn)' : 'var(--bad)';
-    return '<div class="bar-t" data-t="' + t.n + '" title="T' + t.n + ' · q' + t.q + ' · ' + t.tools + ' 次工具">' +
+    return '<div class="bar-t" data-t="' + t.n + '" title="T' + t.n + ' · q' + t.q + ' · ' + t.tools + TX(' 次工具', ' tool calls') + '">' +
       '<i style="height:' + h + 'px;background:' + c + '">' + (t.writes ? '<u></u>' : '') + '</i></div>';
   }).join('');
 
@@ -149,7 +152,7 @@
   var multi = (D.sessions || []).length > 1;
   if (multi) {
     /* 多会话时柱序按会话分组，不是全局时间顺序——再画日期轴就会来回跳，直接不画 */
-    axis.innerHTML = '<span style="left:0;transform:none;opacity:.55">柱子按会话分组排列，不是时间顺序</span>';
+    axis.innerHTML = '<span style="left:0;transform:none;opacity:.55">' + TX('柱子按会话分组排列，不是时间顺序', 'Bars are grouped by session, not by time') + '</span>';
   } else {
   var marks = [], lastKey = '', lastPct = -99;
   T.forEach(function (t, i) {
@@ -199,9 +202,9 @@
         if (i0 < 0) i0 = 0; if (i1 < 0) i1 = T.length - 1;
         // 会话可能主要改的是另一个仓库：写进标签，别让人以为整段都在当前目录
         var kb = s.key ? s.key.split('/').pop() : '';
-        var other = kb && D.cwd && kb !== D.cwd ? ' · 改 ' + kb : '';
+        var other = kb && D.cwd && kb !== D.cwd ? ' · ' + TX('改 ', 'in ') + kb : '';
         return band(i0 / T.length * 100, (i1 + 1) / T.length * 100,
-          '会话 ' + s.id, s.turns + ' 轮' + other);
+          TX('会话 ', 'Session ') + s.id, s.turns + TX(' 轮', ' turns') + other);
       }).join('');
     } else if (SEGS.length > 1) {
       /* 单会话：退回到“工作段”（同一会话里隔了 >3 小时的两截）
@@ -210,13 +213,13 @@
       segrow.innerHTML = SEGS.map(function (s) {
         var a = s[0] / T.length * 100, b = (s[s.length - 1] + 1) / T.length * 100;
         var d = new Date(T[s[0]].ts);
-        var sub = (d.getMonth() + 1) + '/' + d.getDate() + ' · ' + s.length + ' 轮';
+        var sub = (d.getMonth() + 1) + '/' + d.getDate() + ' · ' + s.length + TX(' 轮', ' turns');
         if (b - a < 9) {
           return '<span class="segtick" style="left:' + a.toFixed(2) + '%;width:' + (b - a).toFixed(2) +
-            '%" title="工作段 ' + sub + '"></span>';
+            '%" title="' + TX('工作段 ', 'Work block ') + sub + '"></span>';
         }
         shown++;
-        return band(a, b, '工作段 ' + shown, sub);
+        return band(a, b, TX('工作段 ', 'Work block ') + shown, sub);
       }).join('');
     }
   }
@@ -239,14 +242,14 @@
     detail.innerHTML =
       '<div class="head"><span class="pill">T' + el.n + '</span>' +
       '<span class="pill">' + dt(el.ts) + '</span>' +
-      '<span class="pill q">质量分 ' + el.q + '</span>' +
-      '<span class="pill">' + el.tools + ' 次工具</span>' +
-      (el.dur ? '<span class="pill">' + el.dur + ' 分钟</span>' : '') +
-      (el.err ? '<span class="pill e">' + el.err + ' 次报错</span>' : '') +
-      (el.compacted ? '<span class="pill">上下文压缩</span>' : '') +
-      '<span class="x" id="dx">收起</span></div>' +
-      bub('你', el.user || '（这一轮没有文字指令）', 'u') +
-      bub('AI', el.ai || '（这一轮没有回复正文）', 'a') +
+      '<span class="pill q">' + TX('质量分 ', 'q ') + el.q + '</span>' +
+      '<span class="pill">' + el.tools + TX(' 次工具', ' tool calls') + '</span>' +
+      (el.dur ? '<span class="pill">' + el.dur + TX(' 分钟', ' min') + '</span>' : '') +
+      (el.err ? '<span class="pill e">' + el.err + TX(' 次报错', ' errors') + '</span>' : '') +
+      (el.compacted ? '<span class="pill">' + TX('上下文压缩', 'compacted') + '</span>' : '') +
+      '<span class="x" id="dx">' + TX('收起', 'close') + '</span></div>' +
+      bub(TX('你', 'You'), el.user || TX('（这一轮没有文字指令）', '(no text in this turn)'), 'u') +
+      bub('AI', el.ai || TX('（这一轮没有回复正文）', '(no reply body)'), 'a') +
       filesChip(el.files);
     detail.classList.add('on');
   }
@@ -316,7 +319,7 @@
       var qc = t.q >= 70 ? 'var(--good)' : t.q >= 40 ? 'var(--warn)' : 'var(--bad)';
       return '<div class="um' + (mSel === t.n ? ' on' : '') + '" data-t="' + t.n + '">' +
         '<div class="um-h"><span class="um-n">T' + t.n + '</span><span>' + dt(t.ts) + '</span>' +
-        '<span>' + (t.ulen || t.clean.length) + ' 字</span>' +
+        '<span>' + (t.ulen || t.clean.length) + TX(' 字', ' chars') + '</span>' +
         '<span style="color:' + qc + '">q' + t.q + '</span></div>' +
         '<div class="um-b">' + esc(md(t.clean)) + '</div></div>';
     }).join('');
@@ -361,10 +364,10 @@
   });
 
   /* ---------- 主题 ---------- */
-  var THEMES = [['', '夜色'], ['ice', '深海'], ['amber', '暖夜'], ['paper', '纸白']];
+  var THEMES = [['', TX('夜色', 'Night')], ['ice', TX('深海', 'Deep')], ['amber', TX('暖夜', 'Warm')], ['paper', TX('纸白', 'Paper')]];
   var thBar = document.getElementById('themes');
   if (thBar) {
-    thBar.innerHTML = '<span>风格</span>' + THEMES.map(function (t) {
+    thBar.innerHTML = '<span>' + TX('风格', 'Theme') + '</span>' + THEMES.map(function (t) {
       return '<button data-th="' + t[0] + '">' + t[1] + '</button>';
     }).join('');
     var applyTh = function (name) {
@@ -388,38 +391,52 @@
   function whyOf(k, t, L) {
     var dk = new Date(t.ts), pad = function (n) { return String(n).padStart(2, '0'); };
     var ymd = dk.getFullYear() + '-' + pad(dk.getMonth() + 1) + '-' + pad(dk.getDate());
-    if (k === '最长的一口气') return '连续跑了 ' + t.dur + ' 分钟、' + t.tools + ' 次工具调用' + (t.err ? ('，中间错了 ' + t.err + ' 次也没停') : '，一次没断') + '。你这轮的指令只有 ' + L + ' 字——给的是目标，不是步骤，它才能自己往下推这么久。';
-    if (k === '它干得最多') return t.tools + ' 次工具调用、写了 ' + t.writes + ' 个文件' + (t.err ? ('、错 ' + t.err + ' 次') : '、一次没错') + '。量这么大，说明这轮铺开的是一整块功能，不是一个点的修补。';
-    if (k === '最长的一段需求') return '你一次写了 ' + L + ' 字，把页面、数据、权限、顺序都说完了。回头看，这种长度的交代后面几乎不用返工——歧义在开头就被你消掉了。';
-    if (k === '最顺的一轮') return '0 次报错、' + t.writes + ' 个文件一次写对，q 分 ' + t.q + '。你的指令 ' + L + ' 字，剩下的它自己补完——这是「需求说清楚 + 改动范围小」叠在一起的结果。';
-    if (k === '最晚的一轮') return '这条消息发出时已经 ' + pad(dk.getHours()) + ':' + pad(dk.getMinutes()) + '，这一天你一共调用了 ' + nf(dayTools[ymd] || t.tools) + ' 次工具。收尾阶段的改动通常很小，但都在关键路径上。';
+    if (k === '最长的一口气') return EN
+      ? 'Ran ' + t.dur + ' minutes straight, ' + t.tools + ' tool calls' + (t.err ? (', and kept going through ' + t.err + ' errors') : ', never once stopping') + '. Your instruction for that turn was only ' + L + ' chars — you gave a goal, not steps, which is why it could run that long on its own.'
+      : '连续跑了 ' + t.dur + ' 分钟、' + t.tools + ' 次工具调用' + (t.err ? ('，中间错了 ' + t.err + ' 次也没停') : '，一次没断') + '。你这轮的指令只有 ' + L + ' 字——给的是目标，不是步骤，它才能自己往下推这么久。';
+    if (k === '它干得最多') return EN
+      ? t.tools + ' tool calls and ' + t.writes + ' files written' + (t.err ? (', ' + t.err + ' errors') : ', zero errors') + '. Volume like that means the turn opened up a whole feature, not patched a point.'
+      : t.tools + ' 次工具调用、写了 ' + t.writes + ' 个文件' + (t.err ? ('、错 ' + t.err + ' 次') : '、一次没错') + '。量这么大，说明这轮铺开的是一整块功能，不是一个点的修补。';
+    if (k === '最长的一段需求') return EN
+      ? 'You wrote ' + L + ' chars in one go — pages, data, permissions, order, all of it. Looking back, briefs that long almost never needed rework: you killed the ambiguity at the start.'
+      : '你一次写了 ' + L + ' 字，把页面、数据、权限、顺序都说完了。回头看，这种长度的交代后面几乎不用返工——歧义在开头就被你消掉了。';
+    if (k === '最顺的一轮') return EN
+      ? 'Zero errors, ' + t.writes + ' files right first time, q ' + t.q + '. Your instruction was ' + L + ' chars and it filled in the rest — a clear brief plus a small blast radius.'
+      : '0 次报错、' + t.writes + ' 个文件一次写对，q 分 ' + t.q + '。你的指令 ' + L + ' 字，剩下的它自己补完——这是「需求说清楚 + 改动范围小」叠在一起的结果。';
+    if (k === '最晚的一轮') return EN
+      ? 'Sent at ' + pad(dk.getHours()) + ':' + pad(dk.getMinutes()) + '; that day you made ' + nf(dayTools[ymd] || t.tools) + ' tool calls in total. End-of-day changes are usually small, but they sit on the critical path.'
+      : '这条消息发出时已经 ' + pad(dk.getHours()) + ':' + pad(dk.getMinutes()) + '，这一天你一共调用了 ' + nf(dayTools[ymd] || t.tools) + ' 次工具。收尾阶段的改动通常很小，但都在关键路径上。';
     return '';
   }
   function pickBody(p, t, src) {
+    var why = TX('为什么是它', 'Why this one');
     if (p.kind === 'rework') {
       var c = D.rework.cases.filter(function (x) { return x.turns.indexOf(t.n) >= 0; })[0];
-      var out = '<div class="why"><b>为什么是它</b><p>' + esc(c ? c.cause : '这一轮是整段里最糟的一次，后面几轮都在补同一件事。') + '</p></div>';
+      var out = '<div class="why"><b>' + why + '</b><p>' + esc(c ? c.cause : TX('这一轮是整段里最糟的一次，后面几轮都在补同一件事。', 'The worst turn in the stretch — the following turns were all patching the same thing.')) + '</p></div>';
       if (c) {
-        out += '<div class="rwl"><div class="rwlh">这一段一共 ' + c.n + ' 轮 · 跨 ' + c.spanMin + ' 分钟 · ' + c.errors + ' 次报错 · 你按顺序是这么说的：</div>' +
+        out += '<div class="rwl"><div class="rwlh">' +
+          (EN
+            ? c.n + ' turns, ' + c.spanMin + ' minutes, ' + c.errors + ' errors. In order, this is what you said:'
+            : '这一段一共 ' + c.n + ' 轮 · 跨 ' + c.spanMin + ' 分钟 · ' + c.errors + ' 次报错 · 你按顺序是这么说的：') + '</div>' +
           c.turns.map(function (n) {
             var x = byN[n]; if (!x) return '';
             return '<div class="rwrow"><span class="tn">T' + n + '</span><span class="tx">' +
-              esc(md((x.clean || '（无文字指令）').slice(0, 130))) + '</span><span class="er">' + (x.err ? x.err + ' 错' : '—') + '</span></div>';
+              esc(md((x.clean || TX('（无文字指令）', '(no text instruction)')).slice(0, 130))) + '</span><span class="er">' + (x.err ? x.err + TX(' 错', ' err') : '—') + '</span></div>';
           }).join('') + '</div>' +
-          '<div class="fixb"><b>下次怎么开口</b><p>' + esc(c.fix) + '</p></div>';
+          '<div class="fixb"><b>' + TX('下次怎么开口', 'How to open next time') + '</b><p>' + esc(c.fix) + '</p></div>';
       }
       return out;
     }
-    return '<div class="why"><b>为什么是它</b><p>' + esc(whyOf(p.k, t, src.length)) + '</p></div>' +
-      bub('你', src || '（这一轮没有文字指令）', 'u') +
-      bub('AI', (t.ai || '（这一轮没有回复正文）'), 'a') +
+    return '<div class="why"><b>' + why + '</b><p>' + esc(whyOf(p.k, t, src.length)) + '</p></div>' +
+      bub(TX('你', 'You'), src || TX('（这一轮没有文字指令）', '(no text in this turn)'), 'u') +
+      bub('AI', (t.ai || TX('（这一轮没有回复正文）', '(no reply body)')), 'a') +
       filesChip(t.files);
   }
   var picks = [
-    { k: '最长的一口气', pick: function (L) { var pool = L.filter(function (t) { return t.clean && t.clean.length > 30; }); return (pool.length ? pool : L).reduce(function (a, b) { return b.dur > a.dur ? b : a; }); }, unit: '分钟', val: function (t) { return t.dur; }, note: '连续自动执行最久的一轮' },
-    { k: '它干得最多', pick: function (L) { return L.reduce(function (a, b) { return b.tools > a.tools ? b : a; }); }, unit: '次工具', val: function (t) { return t.tools; }, note: '一轮里调用工具的次数' },
+    { k: '最长的一口气', unit: TX('分钟', 'min'), note: TX('连续自动执行最久的一轮', 'the longest uninterrupted run'), pick: function (L) { var pool = L.filter(function (t) { return t.clean && t.clean.length > 30; }); return (pool.length ? pool : L).reduce(function (a, b) { return b.dur > a.dur ? b : a; }); }, val: function (t) { return t.dur; } },
+    { k: '它干得最多', unit: TX('次工具', 'calls'), note: TX('一轮里调用工具的次数', 'tool calls in a single turn'), pick: function (L) { return L.reduce(function (a, b) { return b.tools > a.tools ? b : a; }); }, val: function (t) { return t.tools; } },
     {
-      k: '最长的一段需求', note: '你写得最完整的一次交代', unit: '字',
+      k: '最长的一段需求', note: TX('你写得最完整的一次交代', 'your most complete brief'), unit: TX('字', 'chars'),
       pick: function (L) {
         var pool = L.filter(function (t) { return t.clean.length >= 150 && t.clean.length <= 1200; });
         if (!pool.length) pool = L;
@@ -427,10 +444,14 @@
       },
       val: function (t) { return t.clean.length; }
     },
-    { k: '最顺的一轮', pick: function (L) { return L.reduce(function (a, b) { return (b.q > a.q ? b : (b.q === a.q && b.tools > a.tools ? b : a)); }); }, unit: '分', val: function (t) { return t.q; }, note: '零报错、按预期落地' },
-    { k: '最惨的一轮', kind: 'rework', pick: function (L) { return L.reduce(function (a, b) { return b.q < a.q ? b : a; }); }, unit: '分', val: function (t) { return t.q; }, note: '点了看这段为什么反复' },
-    { k: '最晚的一轮', pick: function (L) { return L.reduce(function (a, b) { return b.ts > a.ts ? b : a; }); }, unit: '', val: function (t) { var d = new Date(t.ts); return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); }, note: '最后一条消息的时间' }
+    { k: '最顺的一轮', unit: TX('分', 'q'), note: TX('零报错、按预期落地', 'zero errors, landed as planned'), pick: function (L) { return L.reduce(function (a, b) { return (b.q > a.q ? b : (b.q === a.q && b.tools > a.tools ? b : a)); }); }, val: function (t) { return t.q; } },
+    { k: '最惨的一轮', kind: 'rework', unit: TX('分', 'q'), note: TX('点了看这段为什么反复', 'open it to see why this kept coming back'), pick: function (L) { return L.reduce(function (a, b) { return b.q < a.q ? b : a; }); }, val: function (t) { return t.q; } },
+    { k: '最晚的一轮', unit: '', note: TX('最后一条消息的时间', 'the last message of the day'), pick: function (L) { return L.reduce(function (a, b) { return b.ts > a.ts ? b : a; }); }, val: function (t) { var d = new Date(t.ts); return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); } }
   ];
+  function dk(k) {
+    var m = { '最长的一口气': 'Longest unbroken run', '它干得最多': 'Most work in one turn', '最长的一段需求': 'Longest brief', '最顺的一轮': 'Smoothest turn', '最惨的一轮': 'Worst turn', '最晚的一轮': 'Latest turn' };
+    return EN ? (m[k] || k) : k;
+  }
   var box = document.getElementById('picks');
   var used = {};
   box.innerHTML = picks.map(function (p, i) {
@@ -441,10 +462,10 @@
     var src = (t.clean === undefined ? cleanUser(t.user) : t.clean);
     var head = src.slice(0, 150) + (src.length > 150 ? '…' : '');
     return '<div class="pick' + (p.kind === 'rework' ? ' rwk' : '') + '" data-i="' + i + '">' +
-      '<div class="k"><em>' + p.k + '</em><span class="hint"></span></div>' +
+      '<div class="k"><em>' + dk(p.k) + '</em><span class="hint"></span></div>' +
       '<div class="big">' + nf(p.val(t)) + (p.unit ? '<span>' + p.unit + '</span>' : '') + '</div>' +
       '<div class="sub">T' + t.n + ' · ' + dt(t.ts) + ' · ' + p.note + '</div>' +
-      '<div class="q3"><b>你：</b>' + esc(md(head || '（这一轮没有文字指令）')) + '</div>' +
+      '<div class="q3"><b>' + TX('你：', 'You: ') + '</b>' + esc(md(head || TX('（这一轮没有文字指令）', '(no text in this turn)'))) + '</div>' +
       '<div class="pbody">' + pickBody(p, t, src) + '</div></div>';
   }).join('');
   box.addEventListener('click', function (e) {
@@ -471,7 +492,7 @@
     if (m) {
       var bd = m.parentElement.querySelector('.bd');
       var on = bd.classList.toggle('clamp');
-      m.textContent = on ? ('展开全文 · 还有 ' + (m.dataset.rest || '') + ' 字') : '收起';
+      m.textContent = on ? TX('展开全文 · 还有 ' + (m.dataset.rest || '') + ' 字', 'Read more · ' + (m.dataset.rest || '') + ' chars left') : TX('收起', 'collapse');
     }
   });
 
@@ -500,7 +521,23 @@
     var rw = (D.rework.cases || []).filter(function (c) { return c.turns.indexOf(d.turn) >= 0; })[0];
     var shorts = [];
     files.forEach(function (f) { var s = short2(f); if (shorts.indexOf(s) < 0) shorts.push(s); });
-    var s = files.length
+    var s;
+    if (EN) {
+      s = files.length
+        ? ('The next 3 turns touched ' + files.length + ' files (' + shorts.slice(0, 2).join(', ') + (shorts.length > 2 ? ', and more' : '') + ')')
+        : 'The next 3 turns touched no files';
+      s += ', made ' + tools + ' tool calls';
+      if (mins) s += ' and took ' + Math.round(mins) + ' minutes';
+      s += ', with ' + errs + ' errors. ';
+      if (files.length) {
+        s += 'Those files were edited again in ' + touchLater + ' later turns';
+        if (edits) s += ', ' + edits + ' edits in total';
+        s += '. ';
+      }
+      if (rw) s += 'This stretch later turned into ' + rw.id + ' “' + rw.name + '”, a ' + rw.n + '-turn rework.';
+      return s.trim();
+    }
+    s = files.length
       ? ('之后 3 轮动了 ' + files.length + ' 个文件（' + shorts.slice(0, 2).join('、') + (shorts.length > 2 ? ' 等' : '') + '）')
       : '之后 3 轮没有动文件';
     s += '，调用 ' + tools + ' 次工具';
@@ -518,20 +555,20 @@
     // cf 可能是「从日志里读出来的事实」，也可能是「推演」。两者必须一眼分得开，
     // 否则页脚那句「推测内容已单独标注」就是空承诺。
     var k = d.cfKind === 'infer' ? 'infer' : 'fact';
-    var tag = k === 'infer' ? '若走 AI 那条（推演）' : '决策对比（据日志）';
-    var hint = k === 'infer' ? ' title="这条是推演：另一条路没有真的发生过，结论是从后面的数据倒推的"' : '';
+    var tag = k === 'infer' ? TX('若走 AI 那条（推演）', 'Had you taken the AI road (inference)') : TX('决策对比（据日志）', 'Decision comparison (from logs)');
+    var hint = k === 'infer' ? ' title="' + TX('这条是推演：另一条路没有真的发生过，结论是从后面的数据倒推的', 'This one is inference: the other road never happened, so it is back-filled from later data.') + '"' : '';
     return '<div class="cf ' + k + '"' + hint + '><span class="tag">' + tag + '</span><p>' +
-        esc(d.cf || '（这一步没有留下对照记录）') + '</p></div>' +
-      '<div class="res"><span class="tag">决策后产出了什么</span><p>' + esc(resultOf(d)) + '</p></div>';
+        esc(d.cf || TX('（这一步没有留下对照记录）', '(no comparison was recorded for this step)')) + '</p></div>' +
+      '<div class="res"><span class="tag">' + TX('决策后产出了什么', 'What it produced') + '</span><p>' + esc(resultOf(d)) + '</p></div>';
   }
   flows.innerHTML = NODES.map(function (d) {
     return '<div class="dnode" data-n="' + d.turn + '">' +
       '<div class="dnode-h"><span class="n">T' + d.turn + '</span><span class="t">' + esc(d.title) + '</span>' +
-      '<span class="op">展开</span></div>' +
+      '<span class="op">' + TX('展开', 'open') + '</span></div>' +
       '<div class="dfork">' +
-      '<div class="arm no"><span class="tag">AI 主张</span><p>' + esc(d.aiSide || '') + '</p></div>' +
+      '<div class="arm no"><span class="tag">' + TX('AI 主张', 'What the AI wanted') + '</span><p>' + esc(d.aiSide || '') + '</p></div>' +
       '<div class="dfork-c"><span class="dot"></span></div>' +
-      '<div class="arm yes"><span class="tag">你选的</span><p>' + esc(d.choice || '') + '</p></div>' +
+      '<div class="arm yes"><span class="tag">' + TX('你选的', 'What you chose') + '</span><p>' + esc(d.choice || '') + '</p></div>' +
       '</div>' +
       '<div class="dnode-b">' + nodeBody(d) + '</div></div>';
   }).join('');
@@ -541,7 +578,7 @@
     var node = h.parentElement;
     collapseKeep(node, function () { node.classList.toggle('open'); });
     var op = h.querySelector('.op');
-    if (op) op.textContent = node.classList.contains('open') ? '收起' : '展开';
+    if (op) op.textContent = node.classList.contains('open') ? TX('收起', 'close') : TX('展开', 'open');
   });
 
   /* ---------- 03b 时间轴视图 ---------- */
@@ -573,8 +610,8 @@
       collapseKeep(tlBody, function () {
         tlBody.innerHTML = '<div class="tlb"><div class="tlb-h"><span class="n">T' + d.turn + '</span>' +
           '<span class="t">' + esc(d.title) + '</span></div>' +
-          '<div class="cmp"><div><span class="tag">AI 主张</span><p>' + esc(d.aiSide || '') + '</p></div>' +
-          '<div class="yes"><span class="tag">你选的</span><p>' + esc(d.choice || '') + '</p></div></div>' +
+          '<div class="cmp"><div><span class="tag">' + TX('AI 主张', 'What the AI wanted') + '</span><p>' + esc(d.aiSide || '') + '</p></div>' +
+          '<div class="yes"><span class="tag">' + TX('你选的', 'What you chose') + '</span><p>' + esc(d.choice || '') + '</p></div></div>' +
           nodeBody(d) + '</div>';
         tlBody.classList.add('on');
       });
@@ -593,12 +630,12 @@
   }
 
   /* ---------- 06 规则库 ---------- */
-  var GROUPS = ['说话方式', '动手之前', '红线', '交付', '技术'];
+  var GROUPS = EN ? ['Tone', 'Before coding', 'Red lines', 'Delivery', 'Technical'] : ['说话方式', '动手之前', '红线', '交付', '技术'];
   var TGT = {
-    dsh: { path: D.paths.dsh, note: '不存在就新建。DSH 每次请求都会先读这一份，之后所有项目自动生效。' },
-    agents: { path: D.paths.agents, note: '不存在就新建。遵循 agents 约定的工具（Claude Code、Codex 等）也会读。' },
-    project: { path: D.paths.project, note: '只对这个项目生效。放在项目根目录，AI 打开目录时自动带上。' },
-    none: { path: '（不写入文件）', note: '只复制到剪贴板，贴到哪里由你决定。' }
+    dsh: { path: D.paths.dsh, note: TX('不存在就新建。DSH 每次请求都会先读这一份，之后所有项目自动生效。', 'Created if missing. DSH reads this on every request, so it applies to all projects.') },
+    agents: { path: D.paths.agents, note: TX('不存在就新建。遵循 agents 约定的工具（Claude Code、Codex 等）也会读。', 'Created if missing. Tools that follow the agents convention (Claude Code, Codex) read it too.') },
+    project: { path: D.paths.project, note: TX('只对这个项目生效。放在项目根目录，AI 打开目录时自动带上。', 'Applies to this project only. Lives in the repo root; the agent picks it up when it opens the folder.') },
+    none: { path: TX('（不写入文件）', '(no file written)'), note: TX('只复制到剪贴板，贴到哪里由你决定。', 'Copied to the clipboard — you decide where it goes.') }
   };
   document.getElementById('lib').innerHTML = GROUPS.map(function (g) {
     var rs = D.rules.filter(function (r) { return r.group === g; });

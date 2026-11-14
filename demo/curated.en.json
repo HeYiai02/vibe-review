@@ -1,0 +1,97 @@
+{
+  "meta": { "subtitle": "A tiny pour-over coffee bean shop, from zero to first order in two days" },
+  "paths": {
+    "dsh": "~/.dsh/AGENTS.md",
+    "agents": "~/.agents/AGENTS.md",
+    "project": "<repo root>/AGENTS.md"
+  },
+  "decisions": [
+    {
+      "at": "demo0001:1",
+      "title": "Settle three things before the first line of code",
+      "aiSide": "Ask about payment, stock and where orders go — settle all three, then start.",
+      "choice": "No payments yet, cash on delivery; yes, stock matters; orders go to my inbox.",
+      "cf": "Starting straight away would most likely have produced a payment integration that never got used.",
+      "cfKind": "infer"
+    },
+    {
+      "at": "demo0001:4",
+      "title": "Price by weight tier, not hard-coded",
+      "aiSide": "Move pricing to a lookup table so future price changes never touch code.",
+      "choice": "The order page needs 100g / 200g / 500g, with different prices.",
+      "cf": "This paid off once: adding a tier changed one row of data and touched no view code.",
+      "cfKind": "fact"
+    },
+    {
+      "at": "demo0001:11",
+      "title": "Deploy with systemd + rsync, not containers",
+      "aiSide": "Write a systemd unit and a deploy script; skip docker.",
+      "choice": "Deploy to my own little box — no docker.",
+      "cf": "A container would have eaten another 300 MB on a 1 GB machine.",
+      "cfKind": "fact"
+    }
+  ],
+  "rework": {
+    "cases": [
+      {
+        "id": "R1",
+        "ats": ["demo0001:5", "demo0001:6", "demo0001:7", "demo0001:8"],
+        "name": "Order page: told to \"redo it\", never told into what — rebuilt twice",
+        "tag": "form never settled",
+        "cause": "You said \"it's ugly, make it like the Apple Store\". I read that as two cards, image left and form right; what you actually wanted was one long scrolling image with a sticky add-to-cart bar. The form was never agreed, so every version after that just polished details in the wrong direction.",
+        "fix": "For anything the user can see, name the form before writing code: cards, a long page, or layered? Once that is confirmed, I start.",
+        "quotes": [
+          { "text": "The order page is too ugly, redo the whole thing. I want a big image on the left, form on the right, like the Apple Store.", "at": "demo0001:5" },
+          { "text": "No — I want one scrollable long image with a floating add-to-cart bar, not two cards.", "at": "demo0001:6" },
+          { "text": "The add-to-cart bar covers the footer, and on mobile I can't tap it.", "at": "demo0001:7" }
+        ],
+        "prompt": "We're redoing the order page. Don't write code yet — answer me four things:\n1. Does the product image fit one screen, or is it a long page you scroll?\n2. Is add-to-cart a button in the form, or a bar stuck to the bottom?\n3. Under 420px, how do image and form stack?\n4. By \"like the Apple Store\", do you mean lots of whitespace, or big images?\nConfirm those four and then start."
+      }
+    ],
+    "contrast": {
+      "id": "C1",
+      "name": "Admin features: three rounds, every one a new requirement",
+      "tag": "scope was growing",
+      "ats": ["demo0001:9", "demo0001:10"],
+      "cause": "Round one added the order list, round two the origin story, round three deployment — each built on the last. Nothing was ever thrown away."
+    }
+  },
+  "rules": [
+    {
+      "id": "S1",
+      "group": "Before coding",
+      "title": "Ask who it is for and where it runs, before the first line",
+      "rule": "Restate the scene in one sentence and get my confirmation first; if the scene is wrong, the more detail you add the more you waste.",
+      "why": "The order page was rebuilt twice, and the root cause was not taste — it was that you never told me it had to work one-handed on a phone.",
+      "ev": "4 turns of rework on R1, the first 3 all changing the form",
+      "src": "demo0001:5"
+    },
+    {
+      "id": "S2",
+      "group": "Delivery",
+      "title": "Run the main path yourself before saying \"done\"",
+      "rule": "For anything touching mail, files or the network, say what you tested locally and what you did not.",
+      "why": "On turn 5 I said order emails were done; SMTP was never tested and you never got them.",
+      "ev": "T5 had 3 errors, all from not running it first",
+      "src": "demo0001:5"
+    },
+    {
+      "id": "S3",
+      "group": "Technical",
+      "title": "If it can live in data, keep it out of code",
+      "rule": "Prices, tiers and status values belong in tables; views only display them.",
+      "why": "Hard-coded prices mean every new weight tier needs a code change and a redeploy.",
+      "ev": "After T4 every price change touched data only",
+      "src": "demo0001:4"
+    },
+    {
+      "id": "S4",
+      "group": "Red lines",
+      "title": "Say overselling is possible before it bites, not after",
+      "rule": "If you spot a design that will lose money — like \"order without decrementing stock\" — raise it at delivery.",
+      "why": "Overselling came up on turn 12, after it was already live.",
+      "ev": "my own note on the last turn",
+      "src": "demo0001:12"
+    }
+  ]
+}

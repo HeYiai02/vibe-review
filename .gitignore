@@ -12,3 +12,8 @@ out/
 _*.js
 *.bak
 .DS_Store
+# headless browser temp profiles / debug shots
+.i*/
+_*.png
+_*.html
+
