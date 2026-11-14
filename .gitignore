@@ -1,10 +1,11 @@
-﻿node_modules/
+node_modules/
 # 采集产物可能有你的原文、路径、账号——默认不进仓库
 project*.json
 data*.json
 !demo/data.json
 !demo/project.json
 *-review.html
+!demo/*-review.html
 out/
 # 本地试跑
 .bak
