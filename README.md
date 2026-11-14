@@ -95,8 +95,7 @@ What is language-independent and what is not:
 - **Your own session logs** stay in the language you typed. That is the point — we are not translating
   your words, only the frame around them.
 
-Vocab note: the Chinese section names (起手式 / 返工 / 教练页) are load-bearing in the Chinese version.
-The English build translates them (Opening move / Rework analysis / Coach page) rather than romanising them.
+Vocab note: the Chinese section names (起手式 / 返工 / 如果再来一次) are load-bearing — the tool does not rename them into business jargon. The English build translates them (Opening move / Rework analysis / If you ran it again).
 
 ## Known limits
 

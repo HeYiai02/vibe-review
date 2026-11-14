@@ -133,7 +133,7 @@ node archive.js archive.html a.data.json b.data.json
 ## 6. 产物
 
 ```
-<project>-review.html     单文件 HTML（侧边导航 / 光谱 / 决策 / 返工 / 规则库 / 教练页）
+<project>-review.html     单文件 HTML（侧边导航 / 光谱 / 决策 / 返工 / 规则库 / 如果再来一次）
 out/<project>.metrics.json  schema: vibe-review.metrics/1
 out/<project>.md            Markdown 摘要，可进 README
 out/<project>-card-v.png    1200×1600 竖版分享卡

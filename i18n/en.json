@@ -76,7 +76,7 @@
   "s7.where": "Install to",
   "s7.hint": "Takes effect in the next session you start. Existing content is not overwritten; repeated sections are merged.",
   "s7.genhead": "What will be written",
-  "s8.title": "Coach page · if you ran it again",
+  "s8.title": "If you ran it again",
   "s8.note": "Three items, each pinned to a number",
   "s8.lede": "The celebration page says what you achieved; this one says what you could save next time. None of it is \"practise more\" — every item points at specific turns in the log.",
   "btn.pdf": "Export PDF (print)",

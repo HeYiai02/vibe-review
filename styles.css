@@ -495,7 +495,7 @@ html[data-theme="paper"] .themes{filter:invert(1) hue-rotate(180deg)}
 .seg b{color:var(--dim);font-weight:600;margin-right:6px}
 .segtick{position:absolute;top:3px;height:9px;border-left:1px dashed var(--line)}
 .day.zero .bar{background:rgba(255,255,255,.12);height:2px!important;align-self:flex-end}
-/* ---- 庆祝页 / 教练页 ---- */
+/* ---- celebration / coach ---- */
 .cheer{margin-top:38px;border-top:1px solid var(--line);padding-top:24px}
 .cheer-h{font-size:10.5px;letter-spacing:.24em;color:var(--dim2);text-transform:uppercase;margin-bottom:18px}
 .cheer-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px}
