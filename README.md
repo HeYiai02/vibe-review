@@ -2,8 +2,8 @@
 
 **English** · [中文](README.zh-CN.md)
 
-**Live demo:** https://heyiai02.github.io/vibe-review/ — a 12-turn fictional project, all six sections
-(_the report itself is in Chinese for now; see [Language](#language)_)
+**Live demo:** https://heyiai02.github.io/vibe-review/ (Chinese) ·
+[English](https://heyiai02.github.io/vibe-review/en/) — a 12-turn fictional project, all six sections
 
 Turn your AI coding sessions (Claude Code, DeepSeek Harness, or any `vibe-events` JSONL) into a
 **single-page HTML retrospective**: which turns moved the project forward, where you actually reworked
@@ -80,9 +80,21 @@ Contract, field table and anchor rules: **[SKILL.md](SKILL.md)**.
 
 ## Language
 
-The tool, the report UI and the generated narrative are **Chinese-first** — the vocabulary (起手式 / 返工 /
-教练页) is the point, and translating it generically loses the voice. An English UI is not planned;
-contributions that add an i18n layer are welcome.
+`REVIEW_LANG=en` renders the whole report UI in English — try
+[the English demo](https://heyiai02.github.io/vibe-review/en/) next to
+[the Chinese one](https://heyiai02.github.io/vibe-review/).
+
+What is language-independent and what is not:
+
+- **UI** (headings, labels, buttons, the q-score explainer, the coach prompts) — bilingual, via
+  `i18n/zh.json` / `i18n/en.json` plus inline `TX(zh, en)` pairs in `app.js`.
+- **Narrative** (decision titles, rework causes, rules) — written by a human or model in `curated.json`,
+  so it comes out in whatever language you wrote it in. The demo ships `demo/curated.en.json` for this reason.
+- **Your own session logs** stay in the language you typed. That is the point — we are not translating
+  your words, only the frame around them.
+
+Vocab note: the Chinese section names (起手式 / 返工 / 教练页) are load-bearing in the Chinese version.
+The English build translates them (Opening move / Rework analysis / Coach page) rather than romanising them.
 
 ## Known limits
 
