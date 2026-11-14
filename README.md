@@ -1,5 +1,7 @@
 # vibe review
 
+**在线示例：** https://<your-name>.github.io/vibe-review/ （`docs/index.html`，12 轮虚构项目）
+
 把你的 AI 编码记录（Claude Code / DeepSeek Harness / 任意 `vibe-events` JSONL）读成一份**单页 HTML 复盘报告**：
 这一轮该不该拆、哪段在返工、你习惯怎么下指令、下次怎么开口。
 
@@ -33,12 +35,12 @@ node export.js data.json out
 ```bash
 node demo/make-demo.js
 node build.js demo/project.json demo/data.json demo/curated.json
-DATA=demo/data.json OUTHTML=demo/demo-review.html node render.js
+DATA=demo/data.json OUTHTML=docs/index.html node render.js
 node check.js demo/data.json
 ```
 
-`demo/demo-review.html` 是一份 12 轮、完全虚构的项目（一个卖咖啡豆的小站），
-六段齐全，可以直接打开看。
+`docs/index.html` 是一份 12 轮、完全虚构的项目（一个卖咖啡豆的小站），六段齐全。
+GitHub Pages 直接从这个目录发布，所以 **`docs/` 就是示例报告本身**，改完 demo 记得重新渲染一次。
 
 ## 四步流水线
 
