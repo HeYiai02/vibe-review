@@ -651,12 +651,12 @@ function TX(zh, en) { return EN && en != null ? en : zh; }
   function genMd() {
     var sel = {};
     [].forEach.call(document.querySelectorAll('.rchk'), function (c) { if (c.checked) sel[c.value] = 1; });
-    var out = ['# 和我协作的默认约定', '', '> 从 ' + D.meta.project + ' 项目 ' + D.totals.turns + ' 轮协作里提炼。贴进 `AGENTS.md` / `CLAUDE.md`，或作为 system prompt 的末尾。', '> 每条都标了它从哪一轮来；没有证据的是从语气里归纳的。'];
+    var out = EN ? ['# How I like to work with an AI', '', '> Distilled from ' + D.totals.turns + ' turns on ' + D.meta.project + '. Paste it into `AGENTS.md` / `CLAUDE.md`, or at the end of a system prompt.', '> Every line says which turn it came from; anything without evidence was inferred from tone.'] : ['# 和我协作的默认约定', '', '> 从 ' + D.meta.project + ' 项目 ' + D.totals.turns + ' 轮协作里提炼。贴进 `AGENTS.md` / `CLAUDE.md`，或作为 system prompt 的末尾。', '> 每条都标了它从哪一轮来；没有证据的是从语气里归纳的。'];
     GROUPS.forEach(function (g) {
       var rs = D.rules.filter(function (r) { return r.group === g && sel[r.id]; });
       if (!rs.length) return;
       out.push('', '## ' + g);
-      rs.forEach(function (r) { out.push('- **' + r.title + '**：' + r.rule + '  ', '  ' + r.why); });
+      rs.forEach(function (r) { out.push('- **' + r.title + '**' + (EN ? ': ' : '：') + r.rule + '  ', '  ' + r.why); });
     });
     return out.join('\n') + '\n';
   }
@@ -668,7 +668,7 @@ function TX(zh, en) { return EN && en != null ? en : zh; }
     var m = genMd();
     window.__MD = m;
     document.getElementById('genpre').textContent = m;
-    document.getElementById('genmeta').textContent = n + ' 条 · ' + m.replace(/\s/g, '').length + ' 字符';
+    document.getElementById('genmeta').textContent = EN ? (n + ' rules · ' + m.replace(/\s/g, '').length + ' chars') : (n + ' 条 · ' + m.replace(/\s/g, '').length + ' 字符');
     var t = TGT[document.querySelector('input[name=tgt]:checked').value];
     document.getElementById('tgtpath').innerHTML = '<b>' + esc(t.path) + '</b><br>' + esc(t.note);
   }
