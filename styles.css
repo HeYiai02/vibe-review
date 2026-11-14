@@ -542,3 +542,13 @@ html[lang="en"] .pick.open .hint:after{content:"close"}
 html[lang="en"] .pick:not(.open) .hint:after{content:"open"}
 html[lang="en"] .dnode.aftervirt .dnode-h:after{content:"on this inferred path — this step may not hold"}
 html[lang="en"] .cf.infer .tag::after{content:' · not something the log recorded'}
+
+/* ---- language switch (top right; only when the other language exists) ---- */
+.langsw{position:fixed;right:18px;top:16px;z-index:90;display:flex;gap:2px;align-items:center;padding:4px 6px;
+  border:1px solid var(--line);border-radius:999px;background:color-mix(in srgb, var(--bg) 82%, transparent);backdrop-filter:blur(8px);font-size:12px}
+.langsw a,.langsw b{padding:3px 9px;border-radius:999px;line-height:1;text-decoration:none;font-weight:500}
+.langsw a{color:var(--dim2)}
+.langsw a:hover{color:var(--txt)}
+.langsw b{color:var(--txt);background:color-mix(in srgb, var(--accent) 18%, transparent);border:1px solid var(--accent)}
+@media print{.langsw{display:none}}
+

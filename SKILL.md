@@ -200,6 +200,7 @@ DATA=data_<p>.json OUTHTML=<p>-review.html node render.js
   页面渲染出 `s5.title` 这种原始 key——`i18n.js` 里已用 `.replace(/^\uFEFF/, '')` 兜底；
   ② `app.js` 里曾用 `L` 当翻译函数名，与 `drawMsgs` 的列表变量 `L` 撞名导致「数组被当函数调用」，
   现在统一叫 `TX`。
+- **语言切换**是纯静态的：LANG_ALT=en/ node render.js 会在右上角渲染「中文 / EN」，当前语言高亮、另一种是指向对方页面的链接。没有服务端，所以切换就是整页跳转；本地单项目报告不传 LANG_ALT 就不显示这个控件。
 - 英文比中文长 1.5 倍：`h1` 用了 `titleSize` 自适应字号，侧边导航会自动折行，其他块都靠 flex 撑开。
 
 ## 8. 交付前检查

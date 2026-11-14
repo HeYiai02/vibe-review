@@ -13,6 +13,17 @@ const PACKED = zlib.gzipSync(Buffer.from(JSON.stringify(D), 'utf8'), { level: 9 
 
 const COPY = require('./copy.js');
 const { LANG, t: T, DICT } = require('./i18n');
+
+/* 语言切换：只在有另一份报告时出现（静态页没有服务端，只能整页跳转）。
+   LANG_ALT 指向另一语言的页面，例如中文页 en/index.html、英文页 ../index.html */
+const LANG_ALT = process.env.LANG_ALT || '';
+const LANGSW = LANG_ALT
+  ? `<div class="langsw" aria-label="${LANG === 'en' ? 'Language' : '语言'}">` +
+    (LANG === 'en'
+      ? `<a href="${LANG_ALT}">中文</a><b>EN</b>`
+      : `<b>中文</b><a href="${LANG_ALT}">EN</a>`) +
+    `</div>`
+  : '';
 const nf = COPY.nf;
 const fmtD = COPY.dayOf;
 const esc = s => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -309,6 +320,7 @@ ${DEGRADE}
 </div>
 
 <div class="themes" id="themes"></div>
+${LANGSW}
 
 <script id="i18n" type="application/json">${JSON.stringify(DICT)}</script>
 <script id="data" type="application/gzip+base64">${PACKED}</script>

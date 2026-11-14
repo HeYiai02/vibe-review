@@ -82,7 +82,9 @@ Contract, field table and anchor rules: **[SKILL.md](SKILL.md)**.
 
 `REVIEW_LANG=en` renders the whole report UI in English — try
 [the English demo](https://heyiai02.github.io/vibe-review/en/) next to
-[the Chinese one](https://heyiai02.github.io/vibe-review/).
+[the Chinese one](https://heyiai02.github.io/vibe-review/). Both pages carry a **中文 / EN** pill in the
+top-right corner; it is plain HTML, so switching is a page jump (there is no server). Pass
+`LANG_ALT=<other page>` when rendering to add it, and leave it out for a single-language report.
 
 What is language-independent and what is not:
 
